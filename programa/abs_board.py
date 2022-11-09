@@ -1,81 +1,69 @@
-def board_setup(board_size_x, board_size_y, line_size):
+def board_setup(board_size_x, board_size_y, line_size, num_players):
 
     board = [[-1]*board_size_y]*board_size_x
 
-    def end_checker():
+    def end_checker_mv(i, j):
+        """
+        Comprueba si existe un n en raya partiendo de la casilla a la que se ha movido una piedra
+        Para ello hace uso de una fucnión recursiva que se ejecutará en cada una de las 4 direcciones, en ambos sentidos
+        i y j determinarán la posición a la que se ha movido la última piedra
+        Hace return del jugador ganador si hay un n en raya o de -1 si no lo hay
+        """
 
-        for i in range(len(board)):
-            consecutive_h = 1
-            consecutive_d1 = 1
-            consecutive_d2 = 1
-            for j in range(1, len(board[0])):
+        def dir_check(mod_i, mod_j, desv):
+            """
+            Cuenta de manera recursiva el número de casillas iguales a la escogida (board[i][j]) en una dirección y en un sentido
+            mod_i y mod_j determinarán la dirección y sentido en la que avanzará el recuento
+            desv será el número de casillas avanzadas
+            Hace return del número de casillas iguales a la i, j en la dirección y sentido seleccionados
+            """
 
-                #comprobación horizontal
-                if board[i][j] != -1 and board[i][j] == board[i][j-1]:
-                    consecutive_h += 1
-                else:
-                    consecutive_h = 1
+            if desv >= line_size or \
+                i + mod_i*desv < 0 or \
+                i + mod_i*desv >= len(board) or \
+                j + mod_j*desv < 0 or \
+                j + mod_j*desv >= len(board[0]) or \
+                board[i + mod_i*desv][j + mod_j*desv] != board[i][j]:
 
-                #comprobación diagonal 1
-                if i+j < len(board) and board[i+j][j] != -1 and board[i+j][j] == board[i+j-1][j-1]:
-                    consecutive_d1 += 1
-                else:
-                    consecutive_d1 = 1
+                return desv-1
+            else:
+                return dir_check(mod_i, mod_j, desv+1)
+        
+        if dir_check(0, 1, 1) + dir_check(0, -1, 1) + 1 >= line_size or \
+            dir_check(1, 0, 1) + dir_check(-1, 0, 1) + 1 >= line_size or \
+            dir_check(1, 1, 1) + dir_check(-1, -1, 1) + 1 >= line_size or \
+            dir_check(1, -1, 1) + dir_check(-1, 1, 1) + 1 >= line_size:
 
-                #comprobación diagonal 2
-                if i-j >= 0 and board[i-j][j] != -1 and board[i-j][j] == board[i-j+1][j-1]:
-                    consecutive_d2 += 1
-                else:
-                    consecutive_d2 = 1
-
-                if consecutive_h == line_size:
-                    return board[i][j]
-                if consecutive_d1 == line_size:
-                    return board[i+j][j]
-                if consecutive_d2 == line_size:
-                    return board[i-j][j]
-                if consecutive_h > line_size or consecutive_d1 > line_size or consecutive_d2 > line_size:
-                    raise Exception("Error al comprobar si el juego ha finalizado. El número de consecutivos es mayor que el número de línea.")
-
-        for j in range(len(board[0])):
-            consecutive_v = 1
-            consecutive_d1 = 1
-            consecutive_d2 = 1
-            for i in range(1, len(board)):
-
-                #comprobación vertical
-                if board[i][j] != 1 and board[i][j] == board[i-1][j]:
-                    consecutive_v += 1
-                else:
-                    consecutive_v = 1
-                
-                #comprobación diagonal 1
-                if i+j < len(board[0]) and board[i][j+i] != -1 and board[i][j+i] == board[i-1][j+i-1]:
-                    consecutive_d1 += 1
-                else:
-                    consecutive_d1 = 1
-
-                #comprobación diagonal 2
-                if j + len(board) - i + 1 < len(board[0]) and board[i][j + len(board) - i] != -1 and board[i][j + len(board) - i] == board[i-1][j + len(board) - i + 1]:
-                    consecutive_d2 += 1
-                else:
-                    consecutive_d2 = 1
-
-                if consecutive_v == line_size:
-                    return board[i][j]
-                if consecutive_d1 == line_size:
-                    return board[i][j+i]
-                if consecutive_d2 == line_size:
-                    return board[i][j + len(board) - i]
-                if consecutive_v > line_size or consecutive_d1 > line_size or consecutive_d2 > line_size:
-                    raise Exception("Error al comprobar si el juego ha finalizado. El número de consecutivos es mayor que el número de línea.")
-
+            return board[i][j]
         return -1            
 
-    def mv_stone():
-        pass
+    def put_stone(n, i, j):
+        """
+        Pone una piedra en la casilla i, j si la posición es válida y no hay ninguna antes.
+        i y j determinarán la posición para poner la piedra
+        n será el jugador que pone la piedra
+        """
+        
+        if 0 <= i < len(board) and 0 <= j < len(board[0]) and board[i][j] == -1:
+            board[i][j] = n
+            return True
+        return False
+    
+    def check_stone(n, i, j):
+        """
+        Comprueba si la casilla i, j del tablero está ocupada por una piedra del jugador n
+        Devuelve True en caso de que esté ocupada por una piedra del jugador n y false en caso contrario
+        """
 
+        if 0 <= i < len(board) and 0 <= j < len(board[0]) and board[i][j] == n:
+            return True
+        return False
+
+    #para vio
     def draw_txt():
+        """
+        Imprime el tablero
+        """
         pass
 
 def custom_board_checker():
