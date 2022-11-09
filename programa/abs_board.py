@@ -1,8 +1,11 @@
-def board_setup(board_size_x, board_size_y, line_size, num_players):
+from constants import *
+def board_setup(board_size_x, board_size_y, line_size, num_players, num_stones, misery, move_type):
 
     board = [[-1]*board_size_y]*board_size_x
 
-    def end_checker_mv(i, j):
+    bag = num_stones
+
+    def nline_checker(i, j):
         """
         Comprueba si existe un n en raya partiendo de la casilla a la que se ha movido una piedra
         Para ello hace uso de una fucnión recursiva que se ejecutará en cada una de las 4 direcciones, en ambos sentidos
@@ -35,7 +38,7 @@ def board_setup(board_size_x, board_size_y, line_size, num_players):
             dir_check(1, -1, 1) + dir_check(-1, 1, 1) + 1 >= line_size:
 
             return board[i][j]
-        return -1            
+        return -1
 
     def put_stone(n, i, j):
         """
@@ -65,6 +68,15 @@ def board_setup(board_size_x, board_size_y, line_size, num_players):
         Imprime el tablero
         """
         pass
+    
+    #hacer imports condicionales para asignar funciones a end_checker y move
+    def end_checker():
+        pass
+
+    def move():
+        pass
+
+    return end_checker, move
 
 def custom_board_checker():
     pass
