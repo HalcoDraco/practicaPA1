@@ -1,7 +1,7 @@
 from constants import *
-def board_setup(board_size_x, board_size_y, line_size, num_players, num_stones, misery, move_type):
+def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, misery, move_type):
 
-    board = [[-1]*board_size_y]*board_size_x
+    board = [[-1]*board_size_j]*board_size_i
 
     bag = num_stones
 
@@ -62,21 +62,37 @@ def board_setup(board_size_x, board_size_y, line_size, num_players, num_stones, 
             return True
         return False
 
-    #para vio
-    def draw_txt():
-        """
-        Imprime el tablero
-        """
-        pass
     
-    #hacer imports condicionales para asignar funciones a end_checker y move
     def end_checker():
-        pass
+        pass  
 
-    def move():
-        pass
+    def move_generator():
+        def move_normal():
+            pass  
 
-    return end_checker, move
+        def move_adj():
+            pass
+
+        def move_gravity():
+            pass
+
+        if move_type == MT_NORMAL:
+            return move_normal
+        elif move_type == MT_ADJACENT:
+            return move_adj
+        elif move_type == MT_GRAVITY:
+            return move_gravity
+        
+
+
+    
+
+  
+        
+
+                
+
+    return end_checker, move, draw_txt
 
 def custom_board_checker():
     pass
