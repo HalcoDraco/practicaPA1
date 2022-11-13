@@ -3,7 +3,8 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
 
     board = [[-1]*board_size_j]*board_size_i
 
-    bag = num_stones
+    def get_board():
+        return tuple([tuple(x) for x in board])
 
     def nline_checker(i, j):
         """
@@ -51,6 +52,13 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
             board[i][j] = n
             return True
         return False
+
+    def take_stone(n, i, j):
+        if check_stone:
+            board[i][j] = -1
+            return True
+        else:
+            return False
     
     def check_stone(n, i, j):
         """
@@ -83,16 +91,7 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
         elif move_type == MT_GRAVITY:
             return move_gravity
         
-
-
-    
-
-  
-        
-
-                
-
-    return end_checker, move, draw_txt
+    return end_checker, move_generator(), check_stone, put_stone
 
 def custom_board_checker():
     pass
