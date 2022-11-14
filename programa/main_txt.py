@@ -34,21 +34,21 @@ bag = setup[4]
 
 #para vio
 def draw_txt():
-    def draw_txt(board, num_players):
-        for i in board:
-            print("+---" * len(i), end="+\n")
+    board = get_board()
+    for i in board:
+        print("+---" * len(i), end="+\n")
         for j in i:
             if num_players == 2:
-        if j == 0:
-        print("| O ", end="")
-        elif j == 1:
-        print("| X ", end="")
-        else:
-        print("|   ", end="")
-        else:
-        print("| " + (str(j) if j != -1 else " ") + " ", end="")
+                if j == 0:
+                    print("| O ", end="")
+                elif j == 1:
+                    print("| X ", end="")
+                else:
+                    print("|   ", end="")
+            else:
+                print("| " + (str(j) if j != -1 else " ") + " ", end="")
         print("|")
-        print("+---" * len(i), end="+\n")
+    print("+---" * len(i), end="+\n")
 
 def select_stone_org_txt(player):    
     #stone selection
