@@ -28,7 +28,7 @@ while wrong_answer:
 #Falta el menú de la variante custom
 
 setup = VARIANT_SETUPS[sel_variant]
-end_checker, move, check_stone, put_stone, get_board = board_setup(*setup)
+end_checker, move, check_stone, put_stone, get_board, decr_bag, get_bag = board_setup(*setup)
 num_players = setup[3]
 bag = setup[4]
 
@@ -74,7 +74,7 @@ def move_txt(player):
     correcto = False
     while not correcto:
         #origin selection
-        if setup[6] != MT_GRAVITY and bag == 0:
+        if setup[6] != MT_GRAVITY and get_bag() == 0:
             org_i, org_j = select_stone_org_txt(player)
         
         #destiny selection
