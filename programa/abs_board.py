@@ -3,7 +3,7 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
 
     board = [[-1]*board_size_j]*board_size_i
 
-    bags = num_stones
+    bag = num_stones
 
     def decrement_bag():
         pass
@@ -61,7 +61,6 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
     def end_checker():
         pass  
 
-    #returns board
     def move_generator():
         def move_normal():
             pass  
@@ -77,17 +76,35 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
         elif move_type == MT_ADJACENT:
             return move_adj
         elif move_type == MT_GRAVITY:
-            return move_gravity
-        
+            return move_gravity 
+
+    #necesario para el bot, opcional para el end_checker
     def possible_moves_generator():
         def possible_moves_normal(player):
-            pass
+            free_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
+            if bag == 0:
+                owned_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player]
+                return [b + a for a in free_cells for b in owned_cells]
+            else:
+                return free_cells
 
         def possible_moves_adj(player):
-            pass
+            def free_adj(i, j):
+                free = []
+                if i > 0 and board[i-1][j] == -1:
+                    free.append((i-1, j))
+                if i < len(board)-1 and board[i+1][j] == -1:
+                    free.append((i+1, j))
+                if j > 0 and board[i][j-1] == -1:
+                    free.append((i, j-1))
+                if j < len(board[0])-1 and board[i][j+1] == -1:
+                    free.append((i, j+1))
+                return free
+            
+            return [(x, y) + z for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player for z in free_adj(x, y)] if bag == 0 else [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
 
         def possible_moves_gravity(player):
-            pass
+            return [(j,) for j in range(len(board[0])) if board[0][j] == -1]
 
         if move_type == MT_NORMAL:
             return possible_moves_normal
