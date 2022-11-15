@@ -3,7 +3,7 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
 
     board = [[-1]*board_size_j]*board_size_i
 
-    bag = num_stones
+    bags = num_stones
 
     def decrement_bag():
         pass

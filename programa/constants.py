@@ -1,9 +1,9 @@
+#Move types
 MT_NORMAL = "normal"
 MT_ADJACENT = "adjacent"
 MT_GRAVITY = "gravity"
 
-
-
+#Variants
 VARIANTS = ("Tres en raya clásico", "Tres en raya clásico misery", "Tres en raya adyacente", "Tres en raya adyacente misery", "Cuatro en raya", "Custom")
 VARIANT_DESCRIPTIONS = ("Tablero de 3x3, 3 piedras por jugador, 2 jugadores.\nEl primero en hacer 3 en raya gana", \
     "Tablero de 3x3, 4 piedras por jugador, 2 jugadores.\nEl primero en hacer 3 en raya pierde", \
