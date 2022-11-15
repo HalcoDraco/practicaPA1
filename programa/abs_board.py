@@ -46,7 +46,7 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
         return False
 
     def take_stone(player, i, j):
-        if check_stone:
+        if check_stone():
             board[i][j] = -1
             return True
         else:
