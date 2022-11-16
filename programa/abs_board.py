@@ -1,7 +1,7 @@
 from constants import *
 def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, misery, move_type):
 
-    board = [[-1]*board_size_j]*board_size_i
+    main_board = [[-1]*board_size_j]*board_size_i
 
     bag = num_stones
 
@@ -12,10 +12,9 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
         pass
 
     def get_board():
+        return tuple([tuple(x) for x in main_board])
 
-        return tuple([tuple(x) for x in board])
-
-    def nline_checker(i, j):
+    def nline_checker(i, j, board = main_board):
 
         def dir_check(mod_i, mod_j, desv):
 
@@ -38,21 +37,21 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
             return board[i][j]
         return -1
 
-    def put_stone(player, i, j):
+    def put_stone(player, i, j, board = main_board):
         
         if 0 <= i < len(board) and 0 <= j < len(board[0]) and board[i][j] == -1:
             board[i][j] = player
             return True
         return False
 
-    def take_stone(player, i, j):
+    def take_stone(player, i, j, board = main_board):
         if check_stone():
             board[i][j] = -1
             return True
         else:
             return False
     
-    def check_stone(player, i, j):
+    def check_stone(player, i, j, board = main_board):
 
         if 0 <= i < len(board) and 0 <= j < len(board[0]) and board[i][j] == player:
             return True
@@ -80,7 +79,7 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
 
     #necesario para el bot, opcional para el end_checker
     def possible_moves_generator():
-        def possible_moves_normal(player):
+        def possible_moves_normal(player, board = main_board):
             free_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
             if bag == 0:
                 owned_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player]
@@ -88,7 +87,7 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
             else:
                 return free_cells
 
-        def possible_moves_adj(player):
+        def possible_moves_adj(player, board = main_board):
             def free_adj(i, j):
                 free = []
                 if i > 0 and board[i-1][j] == -1:
@@ -103,7 +102,7 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
             
             return [(x, y) + z for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player for z in free_adj(x, y)] if bag == 0 else [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
 
-        def possible_moves_gravity(player):
+        def possible_moves_gravity(player, board = main_board):
             return [(j,) for j in range(len(board[0])) if board[0][j] == -1]
 
         if move_type == MT_NORMAL:
