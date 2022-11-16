@@ -25,6 +25,7 @@ while wrong_answer:
     
     wrong_answer = False
 
+
 #Falta el menú de la variante custom
 
 setup = VARIANT_SETUPS[sel_variant]
@@ -32,7 +33,6 @@ end_checker, move, check_stone, put_stone, get_board, decr_bag, get_bag = board_
 num_players = setup[3]
 bag = setup[4]
 
-#para vio
 def draw_txt():
     board = get_board()
     for i in board:

@@ -24,31 +24,31 @@ def draw_txt():
     print("+---" * len(i), end="+\n")
 
 def possible_moves_generator():
-    def possible_moves_normal(player):
-        free_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
+    def possible_moves_normal(player, mindboard):
+        free_cells = [(x, y) for x in range(len(mindboard)) for y in range(len(mindboard[0])) if mindboard[x][y] == -1]
         if bag == 0:
-            owned_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player]
+            owned_cells = [(x, y) for x in range(len(mindboard)) for y in range(len(mindboard[0])) if mindboard[x][y] == player]
             return [b + a for a in free_cells for b in owned_cells]
         else:
             return free_cells
 
-    def possible_moves_adj(player):
+    def possible_moves_adj(player, mindboard):
         def free_adj(i, j):
             free = []
-            if i > 0 and board[i-1][j] == -1:
+            if i > 0 and mindboard[i-1][j] == -1:
                 free.append((i-1, j))
-            if i < len(board)-1 and board[i+1][j] == -1:
+            if i < len(mindboard)-1 and mindboard[i+1][j] == -1:
                 free.append((i+1, j))
-            if j > 0 and board[i][j-1] == -1:
+            if j > 0 and mindboard[i][j-1] == -1:
                 free.append((i, j-1))
-            if j < len(board[0])-1 and board[i][j+1] == -1:
+            if j < len(mindboard[0])-1 and mindboard[i][j+1] == -1:
                 free.append((i, j+1))
             return free
         
-        return [(x, y) + z for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player for z in free_adj(x, y)] if bag == 0 else [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
+        return [(x, y) + z for x in range(len(mindboard)) for y in range(len(mindboard[0])) if mindboard[x][y] == player for z in free_adj(x, y)] if bag == 0 else [(x, y) for x in range(len(mindboard)) for y in range(len(mindboard[0])) if mindboard[x][y] == -1]
 
-    def possible_moves_gravity(player):
-        return [(j,) for j in range(len(board[0])) if board[0][j] == -1]
+    def possible_moves_gravity(player, mindboard):
+        return [(j,) for j in range(len(mindboard[0])) if mindboard[0][j] == -1]
 
     if move_type == MT_NORMAL:
         return possible_moves_normal
