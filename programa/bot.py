@@ -1,12 +1,24 @@
 from constants import *
-move_type = MT_GRAVITY
+from time import time
+from numba import njit
+import numpy as np
+
+move_type = MT_NORMAL
 num_bot = 1
-main_board = [[-1, 1, -1, 0, -1, -1, -1], [-1, 0, 1, 0, -1, 0, -1], [-1, 0, 0, 0, 1, 0, -1], [-1, 0, 1, 1, 0, 1, -1], [1, 1, 0, 1, 0, 1, -1], [1, 1, 0, 0, 0, 1, 1]]
-line_size = 4
+main_board = [[0,-1,-1],[-1,-1,-1],[-1,-1,-1]]
+line_size = 3
 misery = False
 num_players = 2
-init_bag = [0, 1]
-dep = 4
+init_bag = [3, 1]
+dep = 3
+
+pm = []
+nlc = []
+ec = []
+mv = []
+ap = []
+bp = []
+
 def draw_txt(board):
     for i in board:
         print("+---" * len(i), end="+\n")
@@ -25,11 +37,14 @@ def draw_txt(board):
 
 def possible_moves_generator():
 	def possible_moves_normal(player, bag, board):
+		start = time()
 		free_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
 		if bag[0] == 0:
 			owned_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player]
+			pm.append(time()-start)
 			return [b + a for a in free_cells for b in owned_cells]
 		else:
+			pm.append(time()-start)
 			return free_cells
 
 	def possible_moves_adj(player, bag, board):
@@ -61,7 +76,8 @@ def possible_moves_generator():
 possible_moves = possible_moves_generator()
 
 def nline_checker(i, j, board):
-
+	start = time()
+	
 	def dir_check(mod_i, mod_j, desv):
 
 		if desv >= line_size or \
@@ -79,22 +95,27 @@ def nline_checker(i, j, board):
 		dir_check(1, 0, 1) + dir_check(-1, 0, 1) + 1 >= line_size or \
 		dir_check(1, 1, 1) + dir_check(-1, -1, 1) + 1 >= line_size or \
 		dir_check(1, -1, 1) + dir_check(-1, 1, 1) + 1 >= line_size:
-
+		nlc.append(time()-start)
 		return board[i][j]
+	nlc.append(time()-start)
 	return -1
 
 def end_checker(i, j, board):
-	
+	start = time()
 	check_line = nline_checker(i, j, board)
 	if check_line != -1:
 		if misery:
+			ec.append(time()-start)
 			return True, tuple(range(0, check_line)) + tuple(range(check_line+1, num_players+1)), (check_line,)
 		else:
+			ec.append(time()-start)
 			return True, (check_line,), tuple(range(0, check_line)) + tuple(range(check_line+1, num_players+1))
 	else:
+		ec.append(time()-start)
 		return False, None, None
 
 def mindmove(board, player, move):
+	start = time()
 	mindboard = [x[:] for x in board]
 	l = len(move)
 	if l == 1:
@@ -110,18 +131,23 @@ def mindmove(board, player, move):
 		i, j = move[2], move[3]
 		mindboard[move[0]][move[1]] = -1
 		mindboard[i][j] = player
+	mv.append(time()-start)
 	return mindboard, i, j
 
 def average_prob(prob_moves):
+	start = time()
 	average = (0, 0, 0)
 	l = len(prob_moves)
 	for i in prob_moves:
 		average = (average[0] + i[0]/l, average[1] + i[1]/l, average[2] + i[2]/l)
+	ap.append(time()-start)
 	return average
 
 def best_prob(prob_moves):
+	start = time()
 	minimum = min(prob_moves, key = lambda x: x[2])
 	less_lose = [x for x in prob_moves if x[2] == minimum[2]]
+	bp.append(time()-start)
 	return max(less_lose, key = lambda x: x[0])
 
 diff = []
@@ -182,3 +208,9 @@ print(possible_moves(num_bot, init_bag, main_board))
 print(win_lose_moves(main_board, possible_moves(num_bot, init_bag, main_board), dep, 2, init_bag, 1))
 #print(diff)
 print(diffc)
+
+def avg(arr):
+	if(len(arr) != 0):
+		return sum(arr)/len(arr)
+	return -1
+print(f"pm: {avg(pm)}, nlc: {avg(nlc)}, ec: {avg(ec)}, mv: {avg(mv)}, ap: {avg(ap)}, bp: {avg(bp)}")
