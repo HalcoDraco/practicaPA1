@@ -10,7 +10,7 @@ line_size = 3
 misery = False
 num_players = 2
 init_bag = [3, 1]
-dep = 3
+dep = 34
 
 pm = []
 nlc = []
