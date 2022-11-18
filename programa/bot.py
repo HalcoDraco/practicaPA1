@@ -1,7 +1,5 @@
 from constants import *
 from time import time
-from numba import njit
-import numpy as np
 
 move_type = MT_NORMAL
 num_bot = 1
@@ -10,7 +8,7 @@ line_size = 3
 misery = False
 num_players = 2
 init_bag = [3, 1]
-dep = 34
+dep = 3
 
 pm = []
 nlc = []
@@ -36,10 +34,10 @@ def draw_txt(board):
     print("+---" * len(i), end="+\n")
 
 def possible_moves_generator():
-	def possible_moves_normal(player, bag, board):
+	def possible_moves_normal(player, bag_emtpy, board):
 		start = time()
 		free_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
-		if bag[0] == 0:
+		if bag_emtpy:
 			owned_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player]
 			pm.append(time()-start)
 			return [b + a for a in free_cells for b in owned_cells]
@@ -116,23 +114,22 @@ def end_checker(i, j, board):
 
 def mindmove(board, player, move):
 	start = time()
-	mindboard = [x[:] for x in board]
 	l = len(move)
 	if l == 1:
 		i = 0
 		j = move[0]
-		while i != len(mindboard)-1 and mindboard[i+1][j] == -1:
+		while i != len(board)-1 and board[i+1][j] == -1:
 			i += 1
-		mindboard[i][j] = player
+		board[i][j] = player
 	elif l == 2:
 		i, j = move[0], move[1]
-		mindboard[i][j] = player
+		board[i][j] = player
 	elif l == 4:
 		i, j = move[2], move[3]
-		mindboard[move[0]][move[1]] = -1
-		mindboard[i][j] = player
+		board[move[0]][move[1]] = -1
+		board[i][j] = player
 	mv.append(time()-start)
-	return mindboard, i, j
+	return board, i, j
 
 def average_prob(prob_moves):
 	start = time()
@@ -150,64 +147,62 @@ def best_prob(prob_moves):
 	bp.append(time()-start)
 	return max(less_lose, key = lambda x: x[0])
 
-diff = []
-diffc = 0
-def win_lose_moves(board, pos_moves, depth, num_players, bag_org, cont_players = 1):
-	global diff
-	global diffc
-	bag = bag_org[:]
-	if bag[0] != 0 and bag[1] == 0:
-		bag[0] -= 1
+diff = [0]*(dep+1)
+
+def bag_resolver(bag):
 	if bag[1] == 0:
-		bag[1] = num_players
+		bag[1] = num_players	
+		if bag[0] != 0:
+			bag[0] -= 1
+
+
+
+def win_lose_moves(board, pos_moves, depth, num_players, bag, cont_players = 1):
+	global diff
+
 	turno = num_players-bag[1]
-	
+
 	bag[1] -= 1
+
+	bag_resolver(bag)
+
 	if cont_players == num_players:
 		cont_players = 0
 
 	probs = []
-	#diff.append(len(pos_moves))
+
+	
 	for m in pos_moves:
 		
-		mindboard, i, j = mindmove(board, turno, m)
-		
+		diff[depth] += 1
 
-		""" if depth == 4 and turno == 0:
-			print()
-			draw_txt(board)
-			print(bag_org, bag, m)
-			draw_txt(mindboard)
-			print() """
+		boardt = [row[:] for row in board]
+		mindboard, i, j = mindmove(boardt, turno, m)
 
 		check = end_checker(i, j, mindboard)
 
 		if depth <= 0:
 			probs.append((0, 1, 0))
-			diffc += 1
+
 		elif check[0] and num_bot in check[1]:
 			probs.append((1, 0, 0))
-			diffc += 1
+
 		elif check[0] and num_bot not in check[1]:
 			probs.append((0, 0, 1))
-			diffc += 1
 			
 		else:
 			bagt = bag[:]
-			if bagt[0] != 0 and bagt[1] == 0:
-				bagt[0] -= 1
-				bagt[1] = num_players
 			if cont_players != 0:
-				probs.append(average_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bagt, mindboard), depth, num_players, bagt, cont_players+1)))
+				probs.append(average_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bag[0] == 0, mindboard), depth, num_players, bagt, cont_players+1)))
 			else:
-				probs.append(best_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bagt, mindboard), depth-1, num_players, bagt, cont_players+1)))
+				probs.append(best_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bag[0] == 0, mindboard), depth-1, num_players, bagt, cont_players+1)))
 	return probs
 
 draw_txt(main_board)
-print(possible_moves(num_bot, init_bag, main_board))
-print(win_lose_moves(main_board, possible_moves(num_bot, init_bag, main_board), dep, 2, init_bag, 1))
-#print(diff)
-print(diffc)
+print(possible_moves(num_bot, init_bag[0] == 0, main_board))
+print(win_lose_moves(main_board, possible_moves(num_bot, init_bag[0] == 0, main_board), dep, 2, init_bag, 1))
+
+print(diff)
 
 def avg(arr):
 	if(len(arr) != 0):
