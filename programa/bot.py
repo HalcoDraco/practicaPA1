@@ -1,15 +1,15 @@
 from constants import *
 from time import time
-from numba import njit
+from numba import njit, jit
 import numpy as np
 
 move_type = MT_NORMAL
-num_bot = 1
-main_board = [[0,-1,-1],[-1,-1,-1],[-1,-1,-1]]
+num_bot = 0
+main_board = np.array([[-1,-1,-1],[-1,-1,-1],[-1,-1,-1]])
 line_size = 3
 misery = False
 num_players = 2
-init_bag = [3, 1]
+init_bag = np.array([3, 2])
 dep = 3
 
 pm = []
@@ -36,15 +36,23 @@ def draw_txt(board):
     print("+---" * len(i), end="+\n")
 
 def possible_moves_generator():
-	def possible_moves_normal(player, bag, board):
-		start = time()
-		free_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
-		if bag[0] == 0:
-			owned_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player]
-			pm.append(time()-start)
-			return [b + a for a in free_cells for b in owned_cells]
+
+	@njit
+	def possible_moves_normal(player, empty_bag, board):
+		#start = time()
+		free_cells = np.column_stack(np.where(board == -1))
+		if empty_bag:
+			owned_cells = np.column_stack(np.where(board == player))
+			#pm.append(time()-start)
+			arr = np.empty([owned_cells.shape(0) * free_cells.shape(0), 4])
+			ind_tot = 0
+			for a in range(np.size(owned_cells, 0)):
+				for b in range(np.size(free_cells, 0)):
+					arr[ind_tot] = np.concatenate((owned_cells[a], free_cells[b]))
+					ind_tot += 1
+			return arr
 		else:
-			pm.append(time()-start)
+			#pm.append(time()-start)
 			return free_cells
 
 	def possible_moves_adj(player, bag, board):
@@ -82,10 +90,10 @@ def nline_checker(i, j, board):
 
 		if desv >= line_size or \
 			i + mod_i*desv < 0 or \
-			i + mod_i*desv >= len(board) or \
+			i + mod_i*desv >= np.size(board, 0) or \
 			j + mod_j*desv < 0 or \
-			j + mod_j*desv >= len(board[0]) or \
-			board[i + mod_i*desv][j + mod_j*desv] != board[i][j]:
+			j + mod_j*desv >= np.size(board, 1) or \
+			board[i + mod_i*desv, j + mod_j*desv] != board[i, j]:
 
 			return desv-1
 		else:
@@ -96,7 +104,7 @@ def nline_checker(i, j, board):
 		dir_check(1, 1, 1) + dir_check(-1, -1, 1) + 1 >= line_size or \
 		dir_check(1, -1, 1) + dir_check(-1, 1, 1) + 1 >= line_size:
 		nlc.append(time()-start)
-		return board[i][j]
+		return board[i, j]
 	nlc.append(time()-start)
 	return -1
 
@@ -116,98 +124,87 @@ def end_checker(i, j, board):
 
 def mindmove(board, player, move):
 	start = time()
-	mindboard = [x[:] for x in board]
-	l = len(move)
+	l = np.size(move)
 	if l == 1:
 		i = 0
 		j = move[0]
-		while i != len(mindboard)-1 and mindboard[i+1][j] == -1:
+		while i != np.size(board, 0)-1 and board[i+1, j] == -1:
 			i += 1
-		mindboard[i][j] = player
 	elif l == 2:
-		i, j = move[0], move[1]
-		mindboard[i][j] = player
+		i = move[0]
+		j = move[1]
 	elif l == 4:
-		i, j = move[2], move[3]
-		mindboard[move[0]][move[1]] = -1
-		mindboard[i][j] = player
+		i = move[2]
+		j = move[3]
+		board[move[0], move[1]] = -1
+	board[i, j] = player
 	mv.append(time()-start)
-	return mindboard, i, j
+	return board, i, j
 
 def average_prob(prob_moves):
 	start = time()
-	average = (0, 0, 0)
-	l = len(prob_moves)
-	for i in prob_moves:
-		average = (average[0] + i[0]/l, average[1] + i[1]/l, average[2] + i[2]/l)
+	average = np.average(prob_moves, axis=0)
 	ap.append(time()-start)
 	return average
 
+@njit
 def best_prob(prob_moves):
-	start = time()
-	minimum = min(prob_moves, key = lambda x: x[2])
-	less_lose = [x for x in prob_moves if x[2] == minimum[2]]
-	bp.append(time()-start)
-	return max(less_lose, key = lambda x: x[0])
+	#start = time()
+	minimum_lose = np.amin(prob_moves[:, 2])
+	less_lose_probs = prob_moves[np.where(prob_moves[:, 2] == minimum_lose)]
+	maximum_win_prob = less_lose_probs[np.argmax(less_lose_probs[:, 0])]
+	#bp.append(time()-start)
+	return maximum_win_prob
 
-diff = []
-diffc = 0
-def win_lose_moves(board, pos_moves, depth, num_players, bag_org, cont_players = 1):
-	global diff
-	global diffc
-	bag = bag_org[:]
-	if bag[0] != 0 and bag[1] == 0:
-		bag[0] -= 1
+diff = [0]*(dep+1)
+
+def bag_resolver(bag):
 	if bag[1] == 0:
 		bag[1] = num_players
-	turno = num_players-bag[1]
-	
+		if bag[0] != 0:
+			bag[0] -= 1		
+
+def win_lose_moves(board, pos_moves, depth, num_players, bag, cont_players = 1):
+	global diff
+
+	turno = num_players-bag[1]	
 	bag[1] -= 1
+	
+	bag_resolver(bag)
+
 	if cont_players == num_players:
 		cont_players = 0
 
-	probs = []
-	#diff.append(len(pos_moves))
-	for m in pos_moves:
-		
-		mindboard, i, j = mindmove(board, turno, m)
-		
+	probs = np.empty([np.size(pos_moves, 0), 3])
 
-		""" if depth == 4 and turno == 0:
-			print()
-			draw_txt(board)
-			print(bag_org, bag, m)
-			draw_txt(mindboard)
-			print() """
+	for ind_mov in range(np.size(pos_moves, 0)):
+		diff[depth] += 1
 
+		mindboard, i, j = mindmove(board.copy(), turno, pos_moves[ind_mov])
+		
 		check = end_checker(i, j, mindboard)
 
 		if depth <= 0:
-			probs.append((0, 1, 0))
-			diffc += 1
+			probs[ind_mov] = np.array([0, 1, 0])
 		elif check[0] and num_bot in check[1]:
-			probs.append((1, 0, 0))
-			diffc += 1
+			probs[ind_mov] = np.array([1, 0, 0])
 		elif check[0] and num_bot not in check[1]:
-			probs.append((0, 0, 1))
-			diffc += 1
-			
+			probs[ind_mov] = np.array([0, 0, 1])		
 		else:
-			bagt = bag[:]
-			if bagt[0] != 0 and bagt[1] == 0:
-				bagt[0] -= 1
-				bagt[1] = num_players
 			if cont_players != 0:
-				probs.append(average_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bagt, mindboard), depth, num_players, bagt, cont_players+1)))
+				probs[ind_mov] = average_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bag[0] == 0, mindboard), depth, num_players, bag.copy(), cont_players+1))
 			else:
-				probs.append(best_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bagt, mindboard), depth-1, num_players, bagt, cont_players+1)))
+				probs[ind_mov] = best_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bag[0] == 0, mindboard), depth-1, num_players, bag.copy(), cont_players+1))
 	return probs
 
 draw_txt(main_board)
-print(possible_moves(num_bot, init_bag, main_board))
-print(win_lose_moves(main_board, possible_moves(num_bot, init_bag, main_board), dep, 2, init_bag, 1))
-#print(diff)
-print(diffc)
+
+start_g = time()
+print(win_lose_moves(main_board, possible_moves(num_bot, init_bag[0] == 0, main_board), dep, 2, init_bag, 1))
+print()
+print(time()-start_g)
+
+print(diff)
 
 def avg(arr):
 	if(len(arr) != 0):
