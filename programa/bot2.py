@@ -1,5 +1,5 @@
 from constants import *
-from time import time
+from time import time, sleep
 
 move_type = MT_NORMAL
 
@@ -19,20 +19,20 @@ ap = []
 bp = []
 
 def draw_txt(board):
-    for i in board:
-        print("+---" * len(i), end="+\n")
-        for j in i:
-            if num_players == 2:
-                if j == 0:
-                    print("| O ", end="")
-                elif j == 1:
-                    print("| X ", end="")
-                else:
-                    print("|   ", end="")
-            else:
-                print("| " + (str(j) if j != -1 else " ") + " ", end="")
-        print("|")
-    print("+---" * len(i), end="+\n")
+	for i in board:
+		print("+---" * len(i), end="+\n")
+		for j in i:
+			if num_players == 2:
+				if j == 0:
+					print("| O ", end="")
+				elif j == 1:
+					print("| X ", end="")
+				else:
+					print("|   ", end="")
+			else:
+				print("| " + (str(j) if j != -1 else " ") + " ", end="")
+		print("|")
+	print("+---" * len(i), end="+\n")
 
 def possible_moves_generator():
 	def possible_moves_normal(player, bag_emtpy, board):
@@ -120,15 +120,13 @@ def mindmove(board, player, move):
 		i = 0
 		j = move[0]
 		while i != len(board)-1 and board[i+1][j] == -1:
-			i += 1
-		board[i][j] = player
+			i += 1		
 	elif l == 2:
 		i, j = move[0], move[1]
-		board[i][j] = player
 	elif l == 4:
 		i, j = move[2], move[3]
 		board[move[0]][move[1]] = -1
-		board[i][j] = player
+	board[i][j] = player
 	mv.append(time()-start)
 	return board, i, j
 
@@ -186,19 +184,31 @@ def win_lose_moves(board, pos_moves, depth, bag):
 
 		elif check[0] and num_bot not in check[1]:
 			probs.append((0, 0, 1))
+			if turno != num_bot:
+				return [(0, 0, 1)]
 			
 		else:
 			bagt = bag[:]
 			if turno != num_anterior:
-				probs.append(average_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bag[0] == 0, mindboard), depth, bagt)))
+				move_prob = average_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bag[0] == 0, mindboard), depth, bagt))
 			else:
-				probs.append(best_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bag[0] == 0, mindboard), depth-1, bagt)))
+				move_prob = best_prob(win_lose_moves(mindboard, possible_moves(turno+1 if turno+1 < num_players else 0, bag[0] == 0, mindboard), depth-1, bagt))
+			
+			if turno == num_bot:
+				probs.append(move_prob)
+			else:
+				if move_prob[2] != 0:
+					return [(0, 0, 1)]
+				else:
+					probs.append(move_prob)
 	return probs
 
 """ draw_txt(main_board)
 print(possible_moves(num_bot, init_bag[0] == 0, main_board))
 start = time()
-print(win_lose_moves(main_board, possible_moves(num_bot, init_bag[0] == 0, main_board), dep, init_bag))
+pr = win_lose_moves(main_board, possible_moves(num_bot, init_bag[0] == 0, main_board), dep, init_bag)
+print(pr)
+print(best_prob(pr), " index = ", pr.index(best_prob(pr)))
 print(f"Total: {time()-start}")
 print(diff)
 
@@ -213,21 +223,20 @@ num_bot = 1
 init_bag = [4, 3]
 while not end:
 	num_bot = num_players-1-num_bot
-	
+	if num_bot == 0:
+		dep = 5
+	else:
+		dep = 2
 	num_anterior = num_bot-1 if num_bot > 0 else num_players-1
 	init_bag[1] -= 1
 	bag_resolver(init_bag)
 	po = possible_moves(num_bot, init_bag[0] == 0, main_board)
-	if num_bot == 0:
-		dep = 5
-	else:
-		dep = 3
 	diff = [0]*(dep+1)
 	all_probs = win_lose_moves(main_board, po, dep, init_bag[:])
 	main_board, i, j = mindmove(main_board, num_bot, po[all_probs.index(best_prob(all_probs))])
 	draw_txt(main_board)
 	print(all_probs)
-	print("dep: ", dep)
+	print(dep)
 	print(num_bot)
 	print(diff)
 	print(init_bag)
