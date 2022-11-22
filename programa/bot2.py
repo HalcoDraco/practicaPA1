@@ -224,9 +224,9 @@ init_bag = [4, 3]
 while not end:
 	num_bot = num_players-1-num_bot
 	if num_bot == 0:
-		dep = 5
+		dep = 4
 	else:
-		dep = 2
+		dep = 5
 	num_anterior = num_bot-1 if num_bot > 0 else num_players-1
 	init_bag[1] -= 1
 	bag_resolver(init_bag)
