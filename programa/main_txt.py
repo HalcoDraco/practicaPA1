@@ -1,4 +1,4 @@
-from abs_board import board_setup
+from abs_board import board_setup, custom_board_checker
 from constants import *
 
 wrong_answer = True
@@ -25,14 +25,37 @@ while wrong_answer:
     
     wrong_answer = False
 
+if VARIANTS[sel_variant - 1] == 'Custom':
+    wrong_answer = True
+    while wrong_answer:
+        print(CUSTOM_DESCRIPTION)
+        parametros_escogidos = input()
+        try:
+            lista_strings = parametros_escogidos.split()
+            tupla_custom = (int(lista_strings[0]),int(lista_strings[1]),int(lista_strings[2]),int(lista_strings[3]),int(lista_strings[4]), True if lista_strings[5] == 'M' else False, MT_NORMAL if lista_strings[6] == 'N' else MT_ADJACENT if lista_strings[6] == 'A' else MT_GRAVITY)
+            if lista_strings[5] != 'M' and lista_strings[5] != 'NM':
+                print("\n"*200)
+                input("En la sexta posición debes introducir el valor 'M' o 'NM'" + ".\nPresiona enter para continuar...")
+                continue
+            if lista_strings[6] != 'N' and lista_strings[6] != 'A' and lista_strings[6] != 'G':
+                print("\n"*200)
+                input("En la séptima posición debes introducir el valor 'N' o 'A' o 'G'" + ".\nPresiona enter para continuar...")
+                continue
+        except:
+            print("\n"*200)
+            input("Los datos son incorrectos" + ".\nPresiona enter para continuar...")
+            continue
+        if custom_board_checker(tupla_custom):
+            wrong_answer = False
 
-#Falta el menú de la variante custom
+
 
 setup = VARIANT_SETUPS[sel_variant]
 end_checker, move, check_stone, put_stone, get_board, decr_bag, get_bag = board_setup(*setup)
 num_players = setup[3]
 bag = setup[4]
 
+#para vio
 def draw_txt():
     board = get_board()
     for i in board:
@@ -115,7 +138,6 @@ end = False
 while not end:
     for p in range(num_players):
         i, j = move_txt(p)
-        end, win, lose = end_checker()
-        if end:
-            print(win, lose)
-            break
+        win = end_checker()
+        if win != -1:
+            print(f"El jugador {win} ha ganado!")
