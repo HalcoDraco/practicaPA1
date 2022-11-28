@@ -52,6 +52,7 @@ else:
     setup = VARIANT_SETUPS[sel_variant - 1]
 
 get_board, check_stone, possible_moves, move, end_checker = board_setup(*setup)
+num_players = setup[3]
 
 def draw_txt():
     board = get_board()
@@ -138,7 +139,7 @@ def move_txt(player):
 end = False
 while not end:
     for p in range(num_players):
-        i, j = move_txt(player)
+        i, j = move_txt(p)
         win = end_checker()
         if win != -1:
             print(f"El jugador {win} ha ganado!")
