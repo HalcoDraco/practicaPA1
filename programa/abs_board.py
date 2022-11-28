@@ -3,17 +3,6 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
 
     main_board = [[-1] * board_size_j for x in range(board_size_i)]
 
-    bag = num_stones
-
-    def decrement_bag():
-        pass
-
-    def get_bag():
-        pass
-    
-    def get_board():
-        return tuple([tuple(x) for x in main_board])
-
     def nline_checker(i, j, board = main_board):
 
         def dir_check(mod_i, mod_j, desv):
@@ -52,7 +41,6 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
             return False
     
     def check_stone(player, i, j, board = main_board):
-
         if 0 <= i < len(board) and 0 <= j < len(board[0]) and board[i][j] == player:
             return True
         return False
@@ -108,20 +96,23 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
 
     def move(m, player, board = main_board):
         if len(m) == 1:
-            board_rev = board[::-1]
-            for k in board_rev:
+            i = board_size_i
+            for k in reversed(board):
+                i -= 1
                 if k[m[0]] == -1:
-                    board_rev [k][m[0]] == player
-            board = board_rev[::-1]
+                    k[m[0]] == player
+                    break
+            j = m[0]
         elif len(m) == 2:
             board[m[0]][m[1]] = player
+            i = m[0]
+            j = m[1]
         else:
             board[m[2]][m[3]] = player
             board[m[0]][m[1]] = -1
+            i = m[2]
+            j = m[3]
         return board, i, j
-
-
-    return end_checker, move, check_stone, put_stone, get_board, decrement_bag, get_bag
 
 def custom_board_checker(n):
     if n[3] <= 10 and (n[2] <= n[0] or n[2] <= n[1]) and (n[4] >= n[2] or n[4] == -1) and (n[3] * n[4] <= n[0] * n[1] - 1 or n[4] == -1) and n[0] > 0 and n[1] > 0 and n[2] > 0 and n[3] > 0:

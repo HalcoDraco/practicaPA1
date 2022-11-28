@@ -22,7 +22,6 @@ while wrong_answer:
         print("\n"*200)
         input("El número introducido debe estar entre 1 y " + str(len(VARIANTS)) + ".\nPresiona enter para continuar...")
         continue
-    
     wrong_answer = False
 
 if VARIANTS[sel_variant - 1] == 'Custom':
@@ -47,15 +46,13 @@ if VARIANTS[sel_variant - 1] == 'Custom':
             continue
         if custom_board_checker(tupla_custom):
             wrong_answer = False
+    setup = tupla_custom
 
+else:
+    setup = VARIANT_SETUPS[sel_variant - 1]
 
+get_board, check_stone, possible_moves, move, end_checker = board_setup(*setup)
 
-setup = VARIANT_SETUPS[sel_variant]
-end_checker, move, check_stone, put_stone, get_board, decr_bag, get_bag = board_setup(*setup)
-num_players = setup[3]
-bag = setup[4]
-
-#para vio
 def draw_txt():
     board = get_board()
     for i in board:
@@ -96,12 +93,10 @@ def select_stone_org_txt(player):
 def move_txt(player):
     correcto = False
     while not correcto:
-        #origin selection
-        if setup[6] != MT_GRAVITY and get_bag() == 0:
-            org_i, org_j = select_stone_org_txt(player)
-        
-        #destiny selection
         if setup[6] != MT_GRAVITY:
+            if get_bag == 0:
+                org_i, org_j = select_stone_org_txt(player)
+
             try:
                 dst_i, dst_j = map(int, input("Selecciona una casilla introduciendo dos coordenadas separadas por un espacio, siendo 0, 0 la esquina superior izquierda: ").split())
             except:
@@ -110,7 +105,11 @@ def move_txt(player):
                 print("\n"*200)
                 continue
 
-            correcto = move(player, org_i, org_j, dst_i, dst_j)
+            if get_bag == 0:
+                m = (org_i, org_j, dst_i, dst_j)
+            else:
+                m = (dst_i, dst_j)                
+            correcto = m in possible_moves(player)
 
             if not correcto:
                 print("\n"*200)
@@ -124,20 +123,23 @@ def move_txt(player):
                 input("Columna mal introducida. Debes introducir un único número entero.\nPresiona enter para volver a intentarlo...")
                 print("\n"*200)
                 continue
-
-            correcto, dst_i, dst_j = move(player, dst_j)
+            
+            m = (dst_j,)
+            correcto = m in possible_moves(player)
 
             if not correcto:
                 print("\n"*200)
                 print("Movimiento no válido.\nPresiona enter para volver a intentarlo...")
                 print("\n"*200)
 
-    return dst_i, dst_j
+    i, j = move(m)[1:]
+    return i, j 
 
 end = False
 while not end:
     for p in range(num_players):
-        i, j = move_txt(p)
+        i, j = move_txt(player)
         win = end_checker()
         if win != -1:
             print(f"El jugador {win} ha ganado!")
+            end = True
