@@ -124,11 +124,6 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
     return end_checker, move, check_stone, put_stone, get_board, decrement_bag, get_bag
 
 def custom_board_checker(n):
-    if n[3] <= 10 and (n[2] <= n[0] or n[2] <= n[1]) and (n[4] >= n[2] or n[4] == -1) and (n[3] * n[4] <= n[0] * n[1] - 1 or n[4] == -1):
+    if n[3] <= 10 and (n[2] <= n[0] or n[2] <= n[1]) and (n[4] >= n[2] or n[4] == -1) and (n[3] * n[4] <= n[0] * n[1] - 1 or n[4] == -1) and n[0] > 0 and n[1] > 0 and n[2] > 0 and n[3] > 0:
         return True
     return False
-
-
-
-
-  
