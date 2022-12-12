@@ -5,7 +5,7 @@ move_type = MT_NORMAL
 main_board=[[-1]*3 for irow in range(3)]
 
 line_size = 3
-misery = True
+misery = False
 num_players = 2
 
 dep = 4
@@ -195,7 +195,7 @@ print(f"pm: {avg(pm)}, nlc: {avg(nlc)}, ec: {avg(ec)}, mv: {avg(mv)}, ap: {avg(a
 
 end = False
 num_bot = 1
-init_bag = [4, 2]
+init_bag = [3, 2]
 """ while not end:
 	num_bot = num_players-1-num_bot
 	
@@ -232,13 +232,4 @@ def main():
 	print(diff)
 	print(init_bag)
 
-import cProfile
-import pstats
-
-with cProfile.Profile() as pr:
-	main()
-
-stats = pstats.Stats(pr)
-stats.sort_stats(pstats.SortKey.TIME)
-stats.print_stats()
-stats.dump_stats(filename="profile.prof")
+main()

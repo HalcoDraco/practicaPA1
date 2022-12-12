@@ -2,7 +2,9 @@ from constants import *
 def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, misery, move_type):
 
     main_board = [[-1] * board_size_j for x in range(board_size_i)]
+    bag = [num_stones, num_players]
 
+    #nota para pablo: cambiar a bucle
     def nline_checker(i, j, board = main_board):
 
         def dir_check(mod_i, mod_j, desv):
@@ -25,31 +27,17 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
 
             return board[i][j]
         return -1
-
-    def put_stone(player, i, j, board = main_board):
-        
-        if 0 <= i < len(board) and 0 <= j < len(board[0]) and board[i][j] == -1:
-            board[i][j] = player
-            return True
-        return False
-
-    def take_stone(player, i, j, board = main_board):
-        if check_stone():
-            board[i][j] = -1
-            return True
-        else:
-            return False
     
     def check_stone(player, i, j, board = main_board):
         if 0 <= i < len(board) and 0 <= j < len(board[0]) and board[i][j] == player:
             return True
         return False
 
-    #necesario para el bot, opcional para el end_checker
+    #nota para pablo: corregirlo
     def possible_moves_generator():
         def possible_moves_normal(player, board = main_board):
             free_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
-            if bag == 0:
+            if bag[0] == 0:
                 owned_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player]
                 return [b + a for a in free_cells for b in owned_cells]
             else:
@@ -83,17 +71,23 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
     possible_moves = possible_moves_generator()
 
     def end_checker(i, j, board = main_board):
-        if  nline_checker(i, j) == board[i][j]:
+        if nline_checker(i, j) == board[i][j]:
             if misery:
                 return [x for x in range(num_players) if x != board[i][j]]
             else:
                 return [board[i][j]] 
-        elif len(possible_moves(board[i][j])) == 0:
-            board[i][j] + 1 if board[i][j] != num_players - 1 else 0
+        elif len(possible_moves(board[i][j] + 1 if board[i][j] != num_players - 1 else 0)) == 0:
+            return [x for x in range(num_players) if x != (board[i][j] + 1 if board[i][j] != num_players - 1 else 0)]
         else:
             return -1
 
+    def bag_resolver(bag):
+        if bag[1] == 0:
+            bag[1] = num_players	
+            if bag[0] != 0:
+                bag[0] -= 1
 
+    #nota para pablo: cambiar bag para el bot
     def move(m, player, board = main_board):
         if len(m) == 1:
             i = board_size_i
@@ -112,7 +106,10 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
             board[m[0]][m[1]] = -1
             i = m[2]
             j = m[3]
+        bag[1] -= 1
+        bag_resolver(bag)
         return board, i, j
+    return main_board, check_stone, possible_moves, move, end_checker, bag
 
 def custom_board_checker(n):
     if n[3] <= 10 and (n[2] <= n[0] or n[2] <= n[1]) and (n[4] >= n[2] or n[4] == -1) and (n[3] * n[4] <= n[0] * n[1] - 1 or n[4] == -1) and n[0] > 0 and n[1] > 0 and n[2] > 0 and n[3] > 0:

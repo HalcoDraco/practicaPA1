@@ -51,11 +51,10 @@ if VARIANTS[sel_variant - 1] == 'Custom':
 else:
     setup = VARIANT_SETUPS[sel_variant - 1]
 
-get_board, check_stone, possible_moves, move, end_checker = board_setup(*setup)
+board, check_stone, possible_moves, move, end_checker, bag = board_setup(*setup)
 num_players = setup[3]
 
 def draw_txt():
-    board = get_board()
     for i in board:
         print("+---" * len(i), end="+\n")
         for j in i:
@@ -75,17 +74,22 @@ def select_stone_org_txt(player):
     #stone selection
     correct_selection = False
     while not correct_selection:
-        draw_txt()
         try:
             org_i, org_j = map(int, input("Selecciona una piedra introduciendo dos coordenadas separadas por un espacio, siendo 0, 0 la esquina superior izquierda: ").split())
         except:
             print("\n"*200)
             input("Coordenadas mal introducidas. El formato de input es 'i j' siendo i y j las dos coordenadas.\nPresiona enter para continuar...")
+            print("\n"*200)
+            draw_txt()
+            print(f"\nTurno del jugador {player if num_players > 2 else 'O' if player == 0 else 'X'}")
             continue
         
         if not check_stone(player, org_i, org_j):
             print("\n"*200)
-            print("Casilla no disponible.\nPresiona enter para continuar...")
+            input("Casilla no disponible.\nPresiona enter para continuar...")
+            print("\n"*200)
+            draw_txt()
+            print(f"\nTurno del jugador {player if num_players > 2 else 'O' if player == 0 else 'X'}")
             continue
 
         correct_selection = True 
@@ -94,8 +98,10 @@ def select_stone_org_txt(player):
 def move_txt(player):
     correcto = False
     while not correcto:
+        draw_txt()
+        print(f"\nTurno del jugador {player if num_players > 2 else 'O' if player == 0 else 'X'}")
         if setup[6] != MT_GRAVITY:
-            if get_bag == 0:
+            if bag[0] == 0:
                 org_i, org_j = select_stone_org_txt(player)
 
             try:
@@ -106,7 +112,7 @@ def move_txt(player):
                 print("\n"*200)
                 continue
 
-            if get_bag == 0:
+            if bag[0] == 0:
                 m = (org_i, org_j, dst_i, dst_j)
             else:
                 m = (dst_i, dst_j)                
@@ -114,7 +120,7 @@ def move_txt(player):
 
             if not correcto:
                 print("\n"*200)
-                print("Movimiento no válido.\nPresiona enter para volver a intentarlo...")
+                input("Movimiento no válido.\nPresiona enter para volver a intentarlo...")
                 print("\n"*200)
         else:
             try:
@@ -133,14 +139,17 @@ def move_txt(player):
                 print("Movimiento no válido.\nPresiona enter para volver a intentarlo...")
                 print("\n"*200)
 
-    i, j = move(m)[1:]
+    i, j = move(m, player)[1:]
     return i, j 
 
+print("\n"*200)
 end = False
 while not end:
     for p in range(num_players):
         i, j = move_txt(p)
-        win = end_checker()
+        win = end_checker(i, j)
         if win != -1:
-            print(f"El jugador {win} ha ganado!")
+            draw_txt()
+            print(f"\nEl jugador {win} ha ganado!")
             end = True
+            break
