@@ -136,16 +136,16 @@ def move_txt(player):
 
             if not correcto:
                 print("\n"*200)
-                print("Movimiento no válido.\nPresiona enter para volver a intentarlo...")
+                input("Movimiento no válido.\nPresiona enter para volver a intentarlo...")
                 print("\n"*200)
 
     i, j = move(m, player)[1:]
     return i, j 
 
-print("\n"*200)
 end = False
 while not end:
     for p in range(num_players):
+        print("\n"*200)
         i, j = move_txt(p)
         win = end_checker(i, j)
         if win != -1:

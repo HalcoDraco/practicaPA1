@@ -21,7 +21,7 @@ A la hora de introducir los parámetros debes tener los siguientes indicaciones 
 - El número de piezas de un mismo jugador que haze raya tiene que ser inferior o igual que el número de filas o el número de columnas\n\
 - El número de filas, el número de columnas, número de piezas de un mismo jugador que haze raya i el número de jugadores tienen que ser números enteros positivos i diferentes de zero\n\
 - Si el número de piedras és -1 las dos siguientes indicaciones no se tienen que seguir\n\
-- El número de piedras tiene que ser más grande o igual que el número de piezas de un mismo jugador que haze raya\n\
+- El número de piedras tiene que ser más grande o igual que el número de piezas de un mismo jugador que hace raya\n\
 - El número de piedras multiplicado por el número de jugadores tiene que ser más pequeño o igual que el número de filas por el número de columnas menos 1\n\
 Ej: 7 7 7 3 8 M A"
 VARIANT_SETUPS = ((3, 3, 3, 2, 3, False, MT_NORMAL), \

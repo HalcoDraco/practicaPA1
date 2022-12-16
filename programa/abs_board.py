@@ -6,7 +6,6 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
 
     def nline_checker(i, j, board = main_board):
 
-        #arreglar
         def dir_check(mod_i, mod_j):
 
             desv = 1
@@ -19,13 +18,13 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
                 desv += 1
             return desv - 1
         
-        if dir_check(0, 1, 1) + dir_check(0, -1, 1) + 1 >= line_size or \
-            dir_check(1, 0, 1) + dir_check(-1, 0, 1) + 1 >= line_size or \
-            dir_check(1, 1, 1) + dir_check(-1, -1, 1) + 1 >= line_size or \
-            dir_check(1, -1, 1) + dir_check(-1, 1, 1) + 1 >= line_size:
-
+        if dir_check(0, 1) + dir_check(0, -1) + 1 >= line_size or \
+            dir_check(1, 0) + dir_check(-1, 0) + 1 >= line_size or \
+            dir_check(1, 1) + dir_check(-1, -1) + 1 >= line_size or \
+            dir_check(1, -1) + dir_check(-1, 1) + 1 >= line_size:
             return board[i][j]
         return -1
+
     
     def check_stone(player, i, j, board = main_board):
         if 0 <= i < len(board) and 0 <= j < len(board[0]) and board[i][j] == player:
@@ -79,13 +78,11 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
     #nota para pablo: cambiar bag para el bot
     def move(m, player, board = main_board):
         if len(m) == 1:
-            i = board_size_i
-            for k in reversed(board):
-                i -= 1
-                if k[m[0]] == -1:
-                    k[m[0]] == player
-                    break
+            i = 0
             j = m[0]
+            while i != len(board)-1 and board[i+1][j] == -1:
+                i += 1
+            board[i][j] = player
         elif len(m) == 2:
             board[m[0]][m[1]] = player
             i = m[0]
