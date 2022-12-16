@@ -4,21 +4,20 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
     main_board = [[-1] * board_size_j for x in range(board_size_i)]
     bag = [num_stones, num_players]
 
-    #nota para pablo: cambiar a bucle
     def nline_checker(i, j, board = main_board):
 
-        def dir_check(mod_i, mod_j, desv):
+        #arreglar
+        def dir_check(mod_i, mod_j):
 
-            if desv >= line_size or \
+            desv = 1
+            while not (desv >= line_size or \
                 i + mod_i*desv < 0 or \
                 i + mod_i*desv >= len(board) or \
                 j + mod_j*desv < 0 or \
                 j + mod_j*desv >= len(board[0]) or \
-                board[i + mod_i*desv][j + mod_j*desv] != board[i][j]:
-
-                return desv-1
-            else:
-                return dir_check(mod_i, mod_j, desv+1)
+                board[i + mod_i*desv][j + mod_j*desv] != board[i][j]):
+                desv += 1
+            return desv - 1
         
         if dir_check(0, 1, 1) + dir_check(0, -1, 1) + 1 >= line_size or \
             dir_check(1, 0, 1) + dir_check(-1, 0, 1) + 1 >= line_size or \
@@ -33,9 +32,8 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
             return True
         return False
 
-    #nota para pablo: corregirlo
-    def possible_moves_generator():
-        def possible_moves_normal(player, board = main_board):
+    def possible_moves(player, board = main_board):
+        if move_type == MT_NORMAL:
             free_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
             if bag[0] == 0:
                 owned_cells = [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player]
@@ -43,7 +41,7 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
             else:
                 return free_cells
 
-        def possible_moves_adj(player, board = main_board):
+        elif move_type == MT_ADJACENT:
             def free_adj(i, j):
                 free = []
                 if i > 0 and board[i-1][j] == -1:
@@ -56,19 +54,10 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
                     free.append((i, j+1))
                 return free
             
-            return [(x, y) + z for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player for z in free_adj(x, y)] if bag == 0 else [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
+            return [(x, y) + z for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == player for z in free_adj(x, y)] if bag[0] == 0 else [(x, y) for x in range(len(board)) for y in range(len(board[0])) if board[x][y] == -1]
 
-        def possible_moves_gravity(player, board = main_board):
-            return [(j,) for j in range(len(board[0])) if board[0][j] == -1]
-
-        if move_type == MT_NORMAL:
-            return possible_moves_normal
-        elif move_type == MT_ADJACENT:
-            return possible_moves_adj
         elif move_type == MT_GRAVITY:
-            return possible_moves_gravity
-    
-    possible_moves = possible_moves_generator()
+            return [(j,) for j in range(len(board[0])) if board[0][j] == -1]
 
     def end_checker(i, j, board = main_board):
         if nline_checker(i, j) == board[i][j]:
