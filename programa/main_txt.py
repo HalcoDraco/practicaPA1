@@ -51,8 +51,60 @@ if VARIANTS[sel_variant - 1] == 'Custom':
 else:
     setup = VARIANT_SETUPS[sel_variant - 1]
 
-board, check_stone, possible_moves, move, end_checker, bag = board_setup(*setup)
+board, check_stone, possible_moves, player_move, bot_move, end_checker, bag = board_setup(*setup)
 num_players = setup[3]
+
+bot = False
+pos_player = 0
+bot_depth = 0
+wrong_answer = True
+while wrong_answer:
+    try:
+        print("\n"*200)
+        print("Deseas jugar multijugador o contra la IA?")
+        print("1- Multijugador")
+        print("2- Contra la IA")
+        sel_num = int(input())
+        if(sel_num < 1 or sel_num > 2):
+            print("\n"*200)
+            input("Debes introducir un número del 1 al 2.\nPresiona enter para continuar...")
+        else:
+            wrong_answer = False
+    except:
+        print("\n"*200)
+        input("Debes introducir un número entero.\nPresiona enter para continuar...")
+
+if sel_num == 2:
+    bot = True
+    wrong_answer = True
+    while wrong_answer:
+        try:
+            print("\n"*200)
+            print(f"¿En qué posición deseas jugar? (1-{num_players})")
+            pos_player = int(input()) - 1
+            if(pos_player < 0 or pos_player > num_players - 1):
+                print("\n"*200)
+                input(f"Debes introducir un número del 1 al {num_players}.\nPresiona enter para continuar...")
+            else:
+                wrong_answer = False
+        except:
+            print("\n"*200)
+            input("Debes introducir un número entero.\nPresiona enter para continuar...")
+
+    wrong_answer = True
+    while wrong_answer:
+        try:
+            print("\n"*200)
+            print(f"¿Qué nivel de dificultad quieres que tenga el bot? (1-3)")
+            bot_depth = int(input())
+            if(bot_depth < 1 or bot_depth > 3):
+                print("\n"*200)
+                input(f"Debes introducir un número del 1 al 3.\nPresiona enter para continuar...")
+            else:
+                wrong_answer = False
+        except:
+            print("\n"*200)
+            input("Debes introducir un número entero.\nPresiona enter para continuar...")
 
 def draw_txt():
     for i in board:
@@ -71,7 +123,7 @@ def draw_txt():
     print("+---" * len(i), end="+\n")
 
 def select_stone_org_txt(player):    
-    #stone selection
+    
     correct_selection = False
     while not correct_selection:
         try:
@@ -139,17 +191,23 @@ def move_txt(player):
                 input("Movimiento no válido.\nPresiona enter para volver a intentarlo...")
                 print("\n"*200)
 
-    i, j = move(m, player)[1:]
+    i, j = player_move(m, player)
     return i, j 
 
 end = False
 while not end:
     for p in range(num_players):
         print("\n"*200)
-        i, j = move_txt(p)
+        if bot and p != pos_player:
+            draw_txt()
+            print(f"\nTurno del jugador {p if num_players > 2 else 'O' if p == 0 else 'X'}...")
+            i, j = bot_move(p, bot_depth)      
+        else:
+            i, j = move_txt(p)
         win = end_checker(i, j)
         if win != -1:
+            print("\n"*200)
             draw_txt()
-            print(f"\nEl jugador {win} ha ganado!")
+            print(f"\nEl jugador {[str(x) if num_players > 2 else 'O' if x == 0 else 'X' for x in win]} ha ganado!")
             end = True
             break
