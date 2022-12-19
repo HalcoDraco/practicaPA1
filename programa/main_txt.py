@@ -1,6 +1,8 @@
 from abs_board import board_setup, custom_board_checker
 from constants import *
 
+#crear función help
+
 wrong_answer = True
 while wrong_answer:
     print("Elige una variante:")

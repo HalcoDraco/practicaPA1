@@ -100,6 +100,8 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
         return i, j
     
     #bot
+
+    #no pierde pero tampoco gana
     def bot_move(num_bot, depth):
         pm = possible_moves(num_bot)
         all_probs = win_lose_moves(main_board, pm, depth, bag[:], num_bot)
