@@ -97,11 +97,18 @@ if sel_num == 2:
     while wrong_answer:
         try:
             print("\n"*200)
-            print(f"¿Qué nivel de dificultad quieres que tenga el bot? (1-3)")
+            print(f"¿Qué nivel de dificultad quieres que tenga el bot? (1-3). Introduce 0 para consultar la ayuda")
             bot_depth = int(input())
-            if(bot_depth < 1 or bot_depth > 3):
+            if(bot_depth <0 or bot_depth > 3):
                 print("\n"*200)
                 input(f"Debes introducir un número del 1 al 3.\nPresiona enter para continuar...")
+            elif bot_depth == 0:
+                print("\n"*200)
+                print("El nivel de dificultad determina la profundidad de búsqueda del bot. La búsqueda tiene una complejidad exponencial, por lo que se debe ajustar este valor con mucho cuidado.")
+                print("La cantidad de comprobaciones que hace, viene determinada, más o menos por la fórmula siguiente:")
+                print("num_movimientos_posibles ^ (1 + profundidad * num_jugadores)")
+                print("Sé prudente escogiendo el nivel o tus partidas no acabarán nunca.")
+                input("Presiona enter para continuar...")
             else:
                 wrong_answer = False
         except:
