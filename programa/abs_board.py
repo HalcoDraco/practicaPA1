@@ -111,11 +111,15 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
     def average_prob(prob_moves):
         average = (0, 0, 0)
         l = len(prob_moves)
+        if l == 0:
+            return (1, 0, 0)
         for i in prob_moves:
             average = (average[0] + i[0]/l, average[1] + i[1]/l, average[2] + i[2]/l)
         return average
 
     def best_prob(prob_moves):
+        if len(prob_moves) == 0:
+            return (0, 0, 1)
         minimum = min(prob_moves, key = lambda x: x[2])
         less_lose = [x for x in prob_moves if x[2] == minimum[2]]
         return max(less_lose, key = lambda x: x[0])
