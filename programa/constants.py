@@ -19,7 +19,7 @@ A la hora de introducir los parámetros debes tener los siguientes indicaciones 
 - Pon -1 si quieres que el número de piedras sea infinito\n\
 - El número de jugadores tiene que ser más pequeño o igual a 10\n\
 - El número de piezas de un mismo jugador que haze raya tiene que ser inferior o igual que el número de filas o el número de columnas\n\
-- El número de filas, el número de columnas, número de piezas de un mismo jugador que haze raya i el número de jugadores tienen que ser números enteros positivos i diferentes de zero\n\
+- El número de filas, el número de columnas, número de piezas de un mismo jugador que hace raya i el número de jugadores tienen que ser números enteros positivos i diferentes de zero\n\
 - Si el número de piedras és -1 las dos siguientes indicaciones no se tienen que seguir\n\
 - El número de piedras tiene que ser más grande o igual que el número de piezas de un mismo jugador que hace raya\n\
 - El número de piedras multiplicado por el número de jugadores tiene que ser más pequeño o igual que el número de filas por el número de columnas menos 1\n\
@@ -31,11 +31,12 @@ VARIANT_SETUPS = ((3, 3, 3, 2, 3, False, MT_NORMAL), \
                     (6, 7, 4, 2, -1, False, MT_GRAVITY))
 
 #Colors
-WHITE = (255, 255, 255)
+WHITE = (255,255,255)
 BLACK = (0, 0, 0)
+REDISH = (212,  17,  89)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
+BLUE = (26, 133, 255)
 YELLOW = (255, 255, 0)
 ORANGE = (255, 165, 0)
 PURPLE = (128, 0, 128)
@@ -53,11 +54,12 @@ BUTTON_COLOR = GREY
 SLOT_COLOR = WHITE
 
 #Player color dictionary
-PLAYER_COLORS = {0: RED, 1: GREEN, 2: BLUE, 3: YELLOW, 4: ORANGE, 5: PURPLE, 6: CYAN, 7: PINK, 8: BROWN, 9: LIGHT_BLUE, 10: LIGHT_GREEN}
+PLAYER_COLORS = {0: REDISH, 1: BLUE, 2: GREEN, 3: YELLOW, 4: ORANGE, 5: PURPLE, 6: CYAN, 7: PINK, 8: BROWN, 9: LIGHT_BLUE, 10: LIGHT_GREEN}
 
 #Sizes
 SQUARE_SIZE = 100
-PADDING = 10
+PADDING = 20
+LITTLE_PADDING = 10
 
 START_WINDOW_WIDTH = 750
 START_WINDOW_HEIGHT = 500
@@ -67,6 +69,13 @@ BIG_BUTTON_HEIGHT = 70
 
 SMALL_BUTTON_WIDTH = 60
 SMALL_BUTTON_HEIGHT = 50
+
+MEDIUM_BUTTON_WIDHT = 250
+MEDIUM_BUTTON_HEIGHT = 50
+
+XS_BUTTON_SIZE = 35
+
+HELP_BUTTON_SIZE = SMALL_BUTTON_HEIGHT
 
 #Interfaces
 START_INTERFACE = "start"
