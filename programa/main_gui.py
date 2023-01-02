@@ -7,14 +7,14 @@ def start_screen():
     main_screen = pygame.display.set_mode((START_WINDOW_WIDTH, START_WINDOW_HEIGHT))
     main_screen.fill(BACKGROUND_COLOR)
 
-    text = font.render('Escoge el modo de juego:', False, BLACK)
-    help = font.render('?', False, BLACK)
-    num1_txt = font.render('Normal', False, BLACK)
-    num2_txt = font.render('Misery', False, BLACK)
-    num3_txt = font.render('Adyacente', False, BLACK)
-    num4_txt = font.render('Misery ady', False, BLACK)
-    num5_txt = font.render('4 en raya', False, BLACK)
-    num6_txt = font.render('Custom', False, BLACK)
+    text = font.render('Escoge el modo de juego:', False, TEXT_COLOR)
+    help = font.render('?', False, TEXT_COLOR)
+    num1_txt = font.render('Normal', False, TEXT_COLOR)
+    num2_txt = font.render('Misery', False, TEXT_COLOR)
+    num3_txt = font.render('Adyacente', False, TEXT_COLOR)
+    num4_txt = font.render('Misery ady', False, TEXT_COLOR)
+    num5_txt = font.render('4 en raya', False, TEXT_COLOR)
+    num6_txt = font.render('Custom', False, TEXT_COLOR)
 
     pygame.draw.rect(main_screen, GREY, button1)
     pygame.draw.rect(main_screen, GREY, button2)
@@ -32,7 +32,6 @@ def start_screen():
     main_screen.blit(num4_txt, num4_txt.get_rect(center = (START_WINDOW_WIDTH//2 + PADDING + BIG_BUTTON_WIDTH//2, PADDING*3 + (START_WINDOW_HEIGHT - PADDING*6)//4 + BIG_BUTTON_HEIGHT//2)))
     main_screen.blit(num5_txt, num5_txt.get_rect(center = (START_WINDOW_WIDTH//2 + PADDING + BIG_BUTTON_WIDTH//2, PADDING*3 + (START_WINDOW_HEIGHT - PADDING*6)//2 + BIG_BUTTON_HEIGHT//2)))
     main_screen.blit(num6_txt, num6_txt.get_rect(center = (START_WINDOW_WIDTH//2 + PADDING + BIG_BUTTON_WIDTH//2, PADDING*3 + (START_WINDOW_HEIGHT - PADDING*6)*3//4 + BIG_BUTTON_HEIGHT//2)))
-
     
 def custom_board():
     global main_screen, actual_interface
@@ -40,8 +39,8 @@ def custom_board():
 
     actual_interface = CUSTOM_INTERFACE
 
-    s_suma = font.render('+', False, BLACK)
-    s_resta = font.render('-', False, BLACK)
+    s_suma = font.render('+', False, TEXT_COLOR)
+    s_resta = font.render('-', False, TEXT_COLOR)
 
     n_filas_txt = font.render('Número de filas', False, TEXT_COLOR)
     main_screen.blit(n_filas_txt, (PADDING*2, PADDING))
@@ -93,6 +92,16 @@ def custom_board():
 
     update_values_custom()
 
+def help_screen():
+    global main_screen, actual_interface
+    main_screen.fill(BACKGROUND_COLOR)
+    actual_interface = HELP_INTERFACE
+    help_txt = font.render('Hola, Hola', False, TEXT_COLOR)
+    main_screen.blit(help_txt, (PADDING, PADDING))
+    pygame.draw.rect(main_screen, GREY, button_go_back)
+    go_back_txt = font.render('Volver', False, TEXT_COLOR)
+    main_screen.blit(go_back_txt, go_back_txt.get_rect(center = (START_WINDOW_WIDTH//2, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT//2 - PADDING)))
+    
 def set_setup(num):
     global setup, board, check_stone, possible_moves, player_move, bot_move, end_checker, bag, num_players
     if num != 5:
@@ -165,6 +174,11 @@ def update_values_custom():
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH*5//6 - PADDING, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*5//8 + XS_BUTTON_SIZE//2)))
     text = font.render("Norm" if move_type == MT_NORMAL else "Ady" if move_type == MT_ADJACENT else "Grav", True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH*5//6 - PADDING, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*6//8 + XS_BUTTON_SIZE//2)))
+
+def go_back():
+    global actual_interface
+    actual_interface = START_INTERFACE
+    start_screen()
 
 def mod_num_rows(inc):
     global num_rows
@@ -247,7 +261,7 @@ def mod_move_type(inc):
             move_type = MT_ADJACENT
     update_values_custom()
 
-def custom_continuar():
+def custom_continue():
     global setup, board, check_stone, possible_moves, player_move, bot_move, end_checker, bag, main_screen, num_players
     setup = (num_rows, num_columns, line_size, num_players, num_stones, misery, move_type)
     if custom_board_checker(setup):       
@@ -257,9 +271,6 @@ def custom_continuar():
     else:
         wrong_values_txt = font1.render('Valores erróneos', False, RED)
         main_screen.blit(wrong_values_txt, (START_WINDOW_WIDTH*2//3 + XS_BUTTON_SIZE//2, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*7//8 + MEDIUM_BUTTON_HEIGHT//4))
-
-def help_func():
-    pass
 
 def dec_depth():
     global bot_depth
@@ -374,6 +385,7 @@ button4 = pygame.Rect(START_WINDOW_WIDTH//2 + PADDING, PADDING*3 + (START_WINDOW
 button5 = pygame.Rect(START_WINDOW_WIDTH//2 + PADDING, PADDING*3 + (START_WINDOW_HEIGHT - PADDING*6)//2, BIG_BUTTON_WIDTH, BIG_BUTTON_HEIGHT)
 button6 = pygame.Rect(START_WINDOW_WIDTH//2 + PADDING, PADDING*3 + (START_WINDOW_HEIGHT - PADDING*6)*3//4, BIG_BUTTON_WIDTH, BIG_BUTTON_HEIGHT)
 button_help = pygame.Rect(START_WINDOW_WIDTH - PADDING*3 - HELP_BUTTON_SIZE, PADDING*3, HELP_BUTTON_SIZE, HELP_BUTTON_SIZE)
+button_go_back = pygame.Rect(START_WINDOW_WIDTH//3, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT - PADDING, MEDIUM_BUTTON_WIDHT, MEDIUM_BUTTON_HEIGHT)
 
 button_multiplayer = pygame.Rect(START_WINDOW_WIDTH//2 - BIG_BUTTON_WIDTH//2, START_WINDOW_HEIGHT//3 - BIG_BUTTON_HEIGHT//2, BIG_BUTTON_WIDTH, BIG_BUTTON_HEIGHT)
 button_bot = pygame.Rect(START_WINDOW_WIDTH//2 - BIG_BUTTON_WIDTH//2, 2*START_WINDOW_HEIGHT//3 - BIG_BUTTON_HEIGHT//2, BIG_BUTTON_WIDTH, BIG_BUTTON_HEIGHT)
@@ -426,9 +438,12 @@ button_master = {
         (button_inc_misery, mod_misery),
         (button_dec_move_type, lambda: mod_move_type(False)), 
         (button_inc_move_type, lambda: mod_move_type(True)),
-        (button_custom_continue, custom_continuar)
+        (button_custom_continue, custom_continue)
     ],
     GAME_INTERFACE: [],
+    HELP_INTERFACE: [
+        (button_go_back, go_back)
+    ],
     START_INTERFACE: [
         (button1, lambda: set_setup(0)),
         (button2, lambda: set_setup(1)),
@@ -436,7 +451,7 @@ button_master = {
         (button4, lambda: set_setup(3)),
         (button5, lambda: set_setup(4)),
         (button6, lambda: set_setup(5)),
-        (button_help, help_func)
+        (button_help, help_screen)
     ]
 }
 

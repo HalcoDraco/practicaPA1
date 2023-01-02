@@ -1,10 +1,9 @@
 from abs_board import board_setup, custom_board_checker
 from constants import *
 
-#crear función help
-
 wrong_answer = True
 while wrong_answer:
+    print()
     print("Elige una variante:")
     print()
     for i, v in enumerate(VARIANTS):
@@ -29,7 +28,10 @@ while wrong_answer:
 if VARIANTS[sel_variant - 1] == 'Custom':
     wrong_answer = True
     while wrong_answer:
-        print(CUSTOM_DESCRIPTION)
+        print("\n"*200)
+        for i in range(len(CUSTOM_DESCRIPTION)):
+            print(CUSTOM_DESCRIPTION[i])
+            print()
         parametros_escogidos = input()
         try:
             lista_strings = parametros_escogidos.split()
@@ -99,7 +101,7 @@ if sel_num == 2:
             print("\n"*200)
             print(f"¿Qué nivel de dificultad quieres que tenga el bot? (1-3). Introduce 0 para consultar la ayuda")
             bot_depth = int(input())
-            if(bot_depth <0 or bot_depth > 3):
+            if(bot_depth < 0 or bot_depth > 3):
                 print("\n"*200)
                 input(f"Debes introducir un número del 1 al 3.\nPresiona enter para continuar...")
             elif bot_depth == 0:
