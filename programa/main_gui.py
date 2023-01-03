@@ -310,7 +310,7 @@ def start_bot():
 
 def setup_game():
     global main_screen, actual_interface
-    main_screen = pygame.display.set_mode((len(board[0])*(PADDING + SQUARE_SIZE) + PADDING, len(board)*(PADDING + SQUARE_SIZE) + 2*PADDING + 100))
+    main_screen = pygame.display.set_mode((len(board[0])*(PADDING + SQUARE_SIZE) + PADDING, len(board)*(PADDING + SQUARE_SIZE) + 2*PADDING + SQUARE_SIZE))
     draw_gui()
     actual_interface = GAME_INTERFACE
     

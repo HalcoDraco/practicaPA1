@@ -172,8 +172,8 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
 
         #Añade delay si es necesario para que el bot no sea demasiado rápido
         t2 = time()
-        if 0.7 - (t2-t1) > 0:
-            sleep(0.7 - (t2-t1))
+        if 1 - (t2-t1) > 0:
+            sleep(1 - (t2-t1))
         return i, j
 
     #Función que obtiene la media de una lista de probabilidades
