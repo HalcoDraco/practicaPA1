@@ -15,9 +15,9 @@ VARIANT_DESCRIPTIONS = ("Tablero de 3x3, 3 piedras por jugador, 2 jugadores.\nEl
     "Modo de juego completamente customizable. Se puede personalizar lo siguiente:\n\tLas dimensiones del tablero\n\tEl número de jugadores\n\tEl número de piedras por jugador\n\tEl tamaño n de la raya para hacer n en raya\n\tSi el juego es misery o no\n\tSi la forma de mover las piezas es clásica, adyacente o por gravedad")
 
 #Mensajes de la variante custom
-CUSTOM_DESCRIPTION = ("Introduce los parámetros de tu elección para acceder a la variante custom siguiendo este patrón:", \
-"<número de filas>\n<número de columnas>\n<número de piezas de un mismo jugador que hace raya>\n<número de jugadores>\n<número de piedras>\n<si es la variante misery>\n<tipo de movimiento>", \
-"A la hora de introducir los parámetros debes tener las siguientes indicaciones presentes:", \
+CUSTOM_DESCRIPTION = ("Introduce los parámetros de tu elección para acceder a la variante custom siguiendo este patrón:",
+"<número de filas>\n<número de columnas>\n<número de piezas de un mismo jugador que hace raya>\n<número de jugadores>\n<número de piedras>\n<si es la variante misery>\n<tipo de movimiento>",
+"A la hora de introducir los parámetros debes tener las siguientes indicaciones presentes:",
 "- Pon 'M' si quieres que la variante sea misery y 'NM' si quieres que no lo sea\n\
 - Pon 'N' si quieres que el movimiento sea normal, 'A' si quieres que sea adyacente y 'G' si quieres que sea con gravedad\n\
 - Pon -1 si quieres que el número de piedras sea infinito\n\
@@ -26,7 +26,7 @@ CUSTOM_DESCRIPTION = ("Introduce los parámetros de tu elección para acceder a 
 - El número de filas, el número de columnas, número de piezas de un mismo jugador que hace raya y el número de jugadores tienen que ser números enteros positivos y diferentes de zero\n\
 - Si el número de piedras es -1 las dos siguientes indicaciones no se tienen que seguir\n\
 - El número de piedras tiene que ser más grande o igual que el número de piezas de un mismo jugador que hace raya\n\
-- El número de piedras multiplicado por el número de jugadores tiene que ser más pequeño o igual que el número de filas por el número de columnas menos 1", \
+- El número de piedras multiplicado por el número de jugadores tiene que ser más pequeño o igual que el número de filas por el número de columnas menos 1",
 "Ej: 7 7 7 3 8 M A")
 
 #Variantes predefinidas
