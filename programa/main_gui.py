@@ -260,7 +260,7 @@ def mod_num_rows(inc):
         if num_rows < 10:
             num_rows += 1
     else:
-        if num_rows > 1:
+        if num_rows > 2:
             num_rows -= 1
     update_values_custom()
 
@@ -270,7 +270,7 @@ def mod_num_columns(inc):
         if num_columns < 10:
             num_columns += 1
     else:
-        if num_columns > 1:
+        if num_columns > 2:
             num_columns -= 1
     update_values_custom()
 
@@ -290,7 +290,7 @@ def mod_num_players(inc):
         if num_players < 10:
             num_players += 1
     else:
-        if num_players > 1:
+        if num_players > 2:
             num_players -= 1
     update_values_custom()
 
@@ -434,10 +434,10 @@ bot = False
 bot_depth = 0
 pos_player = 0
 
-num_rows = 1
-num_columns = 1
+num_rows = 2
+num_columns = 2
 line_size = 1
-num_players = 1
+num_players = 2
 num_stones = 1
 misery = False
 move_type = MT_NORMAL

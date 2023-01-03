@@ -69,6 +69,9 @@ if VARIANTS[sel_variant - 1] == 'Custom':
         #Se comprueba que los parámetros sean compatibles y váildos, y si lo son se sale del bucle
         if custom_board_checker(custom_tuple):
             wrong_answer = False
+        else:
+            print("\n"*200)
+            input("Los parámetros introducidos no son compatibles" + ".\nPresiona enter para continuar...")
 
     #Se asignan los parámetros a la variable setup
     setup = custom_tuple
@@ -257,6 +260,16 @@ def move_txt(player):
     i, j = player_move(m, player)
     return i, j 
 
+#Función encargada de imprimir el o los ganadores de la partida
+def print_winner(winners):
+    if len(winners) == 1:
+        print(f"El jugador {winners[0] if num_players > 2 else 'O' if winners[0] == 0 else 'X'} ha ganado")
+    else:
+        print("Los jugadores ", end="")
+        for w in winners:
+            print(f"{w if num_players > 2 else 'O' if w == 0 else 'X'}", end=", " if w != winners[-1] else " ")
+        print("han ganado")
+
 #Bucle principal del juego
 #Se repite mientras no haya un ganador
 end = False
@@ -280,6 +293,6 @@ while not end:
         if win != -1:
             print("\n"*200)
             draw_txt()
-            print(f"\nEl jugador {[str(x) if num_players > 2 else 'O' if x == 0 else 'X' for x in win]} ha ganado!")
+            print_winner(win)
             end = True
             break
