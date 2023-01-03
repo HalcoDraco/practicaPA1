@@ -92,13 +92,18 @@ def custom_board():
 
     update_values_custom()
 
+def multi_line_renderer(text, font, color, surface, x, y, line_spacing = 0):
+    lines = text.splitlines()
+    for line in lines:
+        surface.blit(font.render(line, False, color), (x, y))
+        y += font.get_linesize() + line_spacing
+
 def help_screen():
     global main_screen, actual_interface
     main_screen.fill(BACKGROUND_COLOR)
     actual_interface = HELP_INTERFACE
 
-    help_txt = medium_font.render(CUSTOM_DESCRIPTION[3], False, TEXT_COLOR) #prueba, hay que hacer algo con esto
-    main_screen.blit(help_txt, (PADDING, PADDING))
+    multi_line_renderer(CUSTOM_DESCRIPTION[3], medium_font, TEXT_COLOR, main_screen, PADDING, PADDING)
 
     pygame.draw.rect(main_screen, GREY, button_go_back)
     go_back_txt = big_font.render('Volver', False, TEXT_COLOR)
