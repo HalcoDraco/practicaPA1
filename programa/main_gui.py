@@ -130,12 +130,16 @@ def help_screen():
     #Actualiza la interfaz actual
     actual_interface = HELP_INTERFACE
 
-    multi_line_renderer(CUSTOM_DESCRIPTION[3], medium_font, TEXT_COLOR, main_screen, PADDING, PADDING)
+    multi_line_renderer('Manual de juego', medium_font, TEXT_COLOR, main_screen, PADDING, PADDING)
+    multi_line_renderer(GAME_DESCRIPTION[0], small_font, TEXT_COLOR, main_screen, PADDING, PADDING*2.5)
 
     #Botón de volver
     pygame.draw.rect(main_screen, GREY, button_go_back)
+    pygame.draw.rect(main_screen, BACKGROUND_COLOR, button_next)
     go_back_txt = big_font.render('Volver', False, TEXT_COLOR)
     main_screen.blit(go_back_txt, go_back_txt.get_rect(center = (START_WINDOW_WIDTH//2, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT//2 - PADDING)))
+    next_txt = big_font.render('-->', False, TEXT_COLOR)
+    main_screen.blit(next_txt, next_txt.get_rect(center = (START_WINDOW_WIDTH*5//6, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT//2 - PADDING)))
 
 #Función que carga la variante seleccionada o carga la pantalla de selección custom
 def set_setup(num):
@@ -230,8 +234,25 @@ def update_values_custom():
     text = big_font.render("Norm" if move_type == MT_NORMAL else "Ady" if move_type == MT_ADJACENT else "Grav", True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH*5//6 - PADDING, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*6//8 + XS_BUTTON_SIZE//2)))
 
+def update_values_help():
+    global main_screen
+    pygame.draw.rect(main_screen, BACKGROUND_COLOR, button_back)
+    pygame.draw.rect(main_screen, BACKGROUND_COLOR, pygame.Rect(0, PADDING*2.5, START_WINDOW_WIDTH, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT - PADDING*3.5))
+    pygame.draw.rect(main_screen, BACKGROUND_COLOR, pygame.Rect(START_WINDOW_WIDTH*5//6 - SMALL_BUTTON_WIDTH//2, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT//2 - PADDING - SMALL_BUTTON_HEIGHT//2, SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT))
+    next_txt = big_font.render('<--', False, TEXT_COLOR)
+    main_screen.blit(next_txt, next_txt.get_rect(center = (START_WINDOW_WIDTH//6, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT//2 - PADDING)))
+    multi_line_renderer(GAME_DESCRIPTION[1], small_font, TEXT_COLOR, main_screen, PADDING, PADDING*2.5)
 
-#Funciones que se encargan de modificar los valores de las variables globales
+def next_func():
+    global actual_interface
+    actual_interface = HELP_INTERFACE
+    help_screen()
+    update_values_help()
+
+def back_func():
+    global actual_interface
+    actual_interface = HELP_INTERFACE
+    help_screen()
 
 def mod_num_rows(inc):
     global num_rows
@@ -440,6 +461,8 @@ button5 = pygame.Rect(START_WINDOW_WIDTH//2 + PADDING, PADDING*3 + (START_WINDOW
 button6 = pygame.Rect(START_WINDOW_WIDTH//2 + PADDING, PADDING*3 + (START_WINDOW_HEIGHT - PADDING*6)*3//4, BIG_BUTTON_WIDTH, BIG_BUTTON_HEIGHT)
 button_help = pygame.Rect(START_WINDOW_WIDTH - PADDING*3 - HELP_BUTTON_SIZE, PADDING*3, HELP_BUTTON_SIZE, HELP_BUTTON_SIZE)
 button_go_back = pygame.Rect(START_WINDOW_WIDTH//3, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT - PADDING, MEDIUM_BUTTON_WIDHT, MEDIUM_BUTTON_HEIGHT)
+button_next = pygame.Rect(START_WINDOW_WIDTH*5//6 - SMALL_BUTTON_WIDTH//2, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT//2 - PADDING - SMALL_BUTTON_HEIGHT//2, SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT)
+button_back = pygame.Rect(START_WINDOW_WIDTH//6 - SMALL_BUTTON_WIDTH//2, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT//2 - PADDING - SMALL_BUTTON_HEIGHT//2, SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT)
 
 button_multiplayer = pygame.Rect(START_WINDOW_WIDTH//2 - BIG_BUTTON_WIDTH//2, START_WINDOW_HEIGHT//3 - BIG_BUTTON_HEIGHT//2, BIG_BUTTON_WIDTH, BIG_BUTTON_HEIGHT)
 button_bot = pygame.Rect(START_WINDOW_WIDTH//2 - BIG_BUTTON_WIDTH//2, 2*START_WINDOW_HEIGHT//3 - BIG_BUTTON_HEIGHT//2, BIG_BUTTON_WIDTH, BIG_BUTTON_HEIGHT)
@@ -497,7 +520,9 @@ button_master = {
     ],
     GAME_INTERFACE: [],
     HELP_INTERFACE: [
-        (button_go_back, start_screen)
+        (button_go_back, start_screen),
+        (button_next, next_func),
+        (button_back, back_func)
     ],
     START_INTERFACE: [
         (button1, lambda: set_setup(0)),
@@ -513,7 +538,7 @@ button_master = {
 #Definición de las fuentes usadas en la interfaz
 big_font = pygame.font.Font('freesansbold.ttf', 32)
 medium_font = pygame.font.Font('freesansbold.ttf', 25)
-small_font = pygame.font.Font('freesansbold.ttf', 16)
+small_font = pygame.font.Font('freesansbold.ttf', 13)
 
 pygame.display.set_caption("Tres en raya")
 
