@@ -7,14 +7,14 @@ def start_screen():
     main_screen = pygame.display.set_mode((START_WINDOW_WIDTH, START_WINDOW_HEIGHT))
     main_screen.fill(BACKGROUND_COLOR)
 
-    text = font.render('Escoge el modo de juego:', False, TEXT_COLOR)
-    help = font.render('?', False, TEXT_COLOR)
-    num1_txt = font.render('Normal', False, TEXT_COLOR)
-    num2_txt = font.render('Misery', False, TEXT_COLOR)
-    num3_txt = font.render('Adyacente', False, TEXT_COLOR)
-    num4_txt = font.render('Misery ady', False, TEXT_COLOR)
-    num5_txt = font.render('4 en raya', False, TEXT_COLOR)
-    num6_txt = font.render('Custom', False, TEXT_COLOR)
+    text = big_font.render('Escoge el modo de juego:', False, TEXT_COLOR)
+    help = big_font.render('?', False, TEXT_COLOR)
+    num1_txt = big_font.render('Normal', False, TEXT_COLOR)
+    num2_txt = big_font.render('Misery', False, TEXT_COLOR)
+    num3_txt = big_font.render('Adyacente', False, TEXT_COLOR)
+    num4_txt = big_font.render('Misery ady', False, TEXT_COLOR)
+    num5_txt = big_font.render('4 en raya', False, TEXT_COLOR)
+    num6_txt = big_font.render('Custom', False, TEXT_COLOR)
 
     pygame.draw.rect(main_screen, GREY, button1)
     pygame.draw.rect(main_screen, GREY, button2)
@@ -39,24 +39,24 @@ def custom_board():
 
     actual_interface = CUSTOM_INTERFACE
 
-    s_suma = font.render('+', False, TEXT_COLOR)
-    s_resta = font.render('-', False, TEXT_COLOR)
+    s_suma = big_font.render('+', False, TEXT_COLOR)
+    s_resta = big_font.render('-', False, TEXT_COLOR)
 
-    n_filas_txt = font.render('Número de filas', False, TEXT_COLOR)
+    n_filas_txt = big_font.render('Número de filas', False, TEXT_COLOR)
     main_screen.blit(n_filas_txt, (PADDING*2, PADDING))
-    n_columnas_txt = font.render('Número de columnas', False, TEXT_COLOR)
+    n_columnas_txt = big_font.render('Número de columnas', False, TEXT_COLOR)
     main_screen.blit(n_columnas_txt, (PADDING*2, PADDING + (START_WINDOW_HEIGHT - PADDING*2)//8))
-    n_en_raya_txt = font.render('N en raya', False, TEXT_COLOR)
+    n_en_raya_txt = big_font.render('N en raya', False, TEXT_COLOR)
     main_screen.blit(n_en_raya_txt, (PADDING*2, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*2//8))
-    n_jugadores_txt = font.render('Número de jugadores', False, TEXT_COLOR)
+    n_jugadores_txt = big_font.render('Número de jugadores', False, TEXT_COLOR)
     main_screen.blit(n_jugadores_txt, (PADDING*2, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*3//8))
-    n_piedras_txt = font.render('Número de piedras', False, TEXT_COLOR)
+    n_piedras_txt = big_font.render('Número de piedras', False, TEXT_COLOR)
     main_screen.blit(n_piedras_txt, (PADDING*2, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*4//8))
-    misery_txt = font.render('Variante misery', False, TEXT_COLOR)
+    misery_txt = big_font.render('Variante misery', False, TEXT_COLOR)
     main_screen.blit(misery_txt, (PADDING*2, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*5//8))
-    movimiento_txt = font.render('Tipo de movimiento', False, TEXT_COLOR)
+    movimiento_txt = big_font.render('Tipo de movimiento', False, TEXT_COLOR)
     main_screen.blit(movimiento_txt, (PADDING*2, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*6//8))
-    continuar_txt = font.render('Continuar', False, TEXT_COLOR)
+    continuar_txt = big_font.render('Continuar', False, TEXT_COLOR)
     
     pygame.draw.rect(main_screen, GREY, button_dec_num_rows)
     pygame.draw.rect(main_screen, GREY, button_inc_num_rows)
@@ -96,10 +96,12 @@ def help_screen():
     global main_screen, actual_interface
     main_screen.fill(BACKGROUND_COLOR)
     actual_interface = HELP_INTERFACE
-    help_txt = font.render('Hola, Hola', False, TEXT_COLOR)
+
+    help_txt = medium_font.render(CUSTOM_DESCRIPTION[3], False, TEXT_COLOR) #prueba, hay que hacer algo con esto
     main_screen.blit(help_txt, (PADDING, PADDING))
+
     pygame.draw.rect(main_screen, GREY, button_go_back)
-    go_back_txt = font.render('Volver', False, TEXT_COLOR)
+    go_back_txt = big_font.render('Volver', False, TEXT_COLOR)
     main_screen.blit(go_back_txt, go_back_txt.get_rect(center = (START_WINDOW_WIDTH//2, START_WINDOW_HEIGHT - MEDIUM_BUTTON_HEIGHT//2 - PADDING)))
     
 def set_setup(num):
@@ -118,9 +120,9 @@ def select_bot_multi():
     actual_interface = SELECT_BOT_INTERFACE
     pygame.draw.rect(main_screen, BUTTON_COLOR, button_multiplayer)
     pygame.draw.rect(main_screen, BUTTON_COLOR, button_bot)
-    text = font.render('Multiplayer', False, TEXT_COLOR)
+    text = big_font.render('Multiplayer', False, TEXT_COLOR)
     main_screen.blit(text, text.get_rect(center = (button_multiplayer.centerx, button_multiplayer.centery)))
-    text = font.render('Bot', False, TEXT_COLOR)
+    text = big_font.render('Bot', False, TEXT_COLOR)
     main_screen.blit(text, text.get_rect(center = (button_bot.centerx, button_bot.centery)))
 
 def setup_bot():
@@ -132,25 +134,25 @@ def setup_bot():
     pygame.draw.rect(main_screen, BUTTON_COLOR, button_dec_pos_player)
     pygame.draw.rect(main_screen, BUTTON_COLOR, button_inc_pos_player)
     pygame.draw.rect(main_screen, BUTTON_COLOR, button_bot_continue)
-    text = font.render('Dificultad del bot', False, TEXT_COLOR)
+    text = big_font.render('Dificultad del bot', False, TEXT_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH//2, START_WINDOW_HEIGHT//6)))
-    text = font.render('Turno del jugador', False, TEXT_COLOR)
+    text = big_font.render('Turno del jugador', False, TEXT_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH//2, 3*START_WINDOW_HEIGHT//6)))
-    text = font.render('-', False, TEXT_COLOR)
+    text = big_font.render('-', False, TEXT_COLOR)
     main_screen.blit(text, text.get_rect(center = (button_dec_depth.centerx, button_dec_depth.centery)))
     main_screen.blit(text, text.get_rect(center = (button_dec_pos_player.centerx, button_dec_pos_player.centery)))
-    text = font.render('+', False, TEXT_COLOR)
+    text = big_font.render('+', False, TEXT_COLOR)
     main_screen.blit(text, text.get_rect(center = (button_inc_depth.centerx, button_inc_depth.centery)))
     main_screen.blit(text, text.get_rect(center = (button_inc_pos_player.centerx, button_inc_pos_player.centery)))
-    text = font.render('Continuar', False, TEXT_COLOR)
+    text = big_font.render('Continuar', False, TEXT_COLOR)
     main_screen.blit(text, text.get_rect(center = (button_bot_continue.centerx, button_bot_continue.centery)))
     update_values_bot()
 
 def update_values_bot():
     global main_screen
-    text = font.render(str(bot_depth), True, TEXT_COLOR, BACKGROUND_COLOR)
+    text = big_font.render(str(bot_depth), True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH//2, 2*START_WINDOW_HEIGHT//6)))
-    text = font.render(str(pos_player+1), True, TEXT_COLOR, BACKGROUND_COLOR)
+    text = big_font.render(str(pos_player+1), True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH//2, 4*START_WINDOW_HEIGHT//6)))
 
 def update_values_custom():
@@ -160,19 +162,19 @@ def update_values_custom():
     pygame.draw.rect(main_screen, BACKGROUND_COLOR, rectangulo)
     pygame.draw.rect(main_screen, BACKGROUND_COLOR, pygame.Rect(START_WINDOW_WIDTH*2//3 + XS_BUTTON_SIZE//2, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*7//8 + MEDIUM_BUTTON_HEIGHT//4, MEDIUM_BUTTON_WIDHT, MEDIUM_BUTTON_HEIGHT))
 
-    text = font.render(str(num_rows), True, TEXT_COLOR, BACKGROUND_COLOR)
+    text = big_font.render(str(num_rows), True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH*5//6 - PADDING, PADDING + XS_BUTTON_SIZE//2)))
-    text = font.render(str(num_columns), True, TEXT_COLOR, BACKGROUND_COLOR)
+    text = big_font.render(str(num_columns), True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH*5//6 - PADDING, PADDING + (START_WINDOW_HEIGHT - PADDING*2)//8 + XS_BUTTON_SIZE//2)))
-    text = font.render(str(line_size), True, TEXT_COLOR, BACKGROUND_COLOR)
+    text = big_font.render(str(line_size), True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH*5//6 - PADDING, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*2//8 + XS_BUTTON_SIZE//2)))
-    text = font.render(str(num_players), True, TEXT_COLOR, BACKGROUND_COLOR)
+    text = big_font.render(str(num_players), True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH*5//6 - PADDING, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*3//8 + XS_BUTTON_SIZE//2)))
-    text = font.render(str(num_stones) if num_stones != -1 else "inf", True, TEXT_COLOR, BACKGROUND_COLOR)
+    text = big_font.render(str(num_stones) if num_stones != -1 else "inf", True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH*5//6 - PADDING, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*4//8 + XS_BUTTON_SIZE//2)))
-    text = font.render("Sí" if misery == True else "No", True, TEXT_COLOR, BACKGROUND_COLOR)
+    text = big_font.render("Sí" if misery == True else "No", True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH*5//6 - PADDING, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*5//8 + XS_BUTTON_SIZE//2)))
-    text = font.render("Norm" if move_type == MT_NORMAL else "Ady" if move_type == MT_ADJACENT else "Grav", True, TEXT_COLOR, BACKGROUND_COLOR)
+    text = big_font.render("Norm" if move_type == MT_NORMAL else "Ady" if move_type == MT_ADJACENT else "Grav", True, TEXT_COLOR, BACKGROUND_COLOR)
     main_screen.blit(text, text.get_rect(center = (START_WINDOW_WIDTH*5//6 - PADDING, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*6//8 + XS_BUTTON_SIZE//2)))
 
 def go_back():
@@ -269,7 +271,7 @@ def custom_continue():
         num_players = setup[3]
         select_bot_multi()
     else:
-        wrong_values_txt = font1.render('Valores erróneos', False, RED)
+        wrong_values_txt = medium_font.render('Valores erróneos', False, RED)
         main_screen.blit(wrong_values_txt, (START_WINDOW_WIDTH*2//3 + XS_BUTTON_SIZE//2, PADDING + (START_WINDOW_HEIGHT - PADDING*2)*7//8 + MEDIUM_BUTTON_HEIGHT//4))
 
 def dec_depth():
@@ -341,7 +343,7 @@ def draw_gui():
         for ind, winner in enumerate(win):
             rect = pygame.Rect(PADDING + ind*((SQUARE_SIZE+PADDING)*len(board[0]) - PADDING)//len(win), (PADDING + SQUARE_SIZE)*len(board) + PADDING, ((SQUARE_SIZE+PADDING)*len(board[0]) - PADDING)//len(win), SQUARE_SIZE)
             pygame.draw.rect(main_screen, PLAYER_COLORS[winner], rect)
-        text = font.render('Game Over', False, TEXT_COLOR)
+        text = big_font.render('Game Over', False, TEXT_COLOR)
         text_rect = text.get_rect()
         text_rect.center = ((SQUARE_SIZE+PADDING)*len(board[0]) + PADDING)//2, (PADDING + SQUARE_SIZE)*len(board) + PADDING + SQUARE_SIZE//2
         main_screen.blit(text, text_rect)
@@ -455,9 +457,9 @@ button_master = {
     ]
 }
 
-font = pygame.font.Font('freesansbold.ttf', 32)
-font1 = pygame.font.Font('freesansbold.ttf', 25)
-
+big_font = pygame.font.Font('freesansbold.ttf', 32)
+medium_font = pygame.font.Font('freesansbold.ttf', 25)
+small_font = pygame.font.Font('freesansbold.ttf', 16)
 
 main_screen = None
 pygame.display.set_caption("Tres en raya")
