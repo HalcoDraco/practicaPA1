@@ -188,7 +188,7 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
         #Si hay probabilidades, devuelve la media de las probabilidades
         average = (0, 0, 0)
         for i in prob_moves:
-            average = (round(average[0] + i[0]/l, 3), round(average[1] + i[1]/l, 3), round(average[2] + i[2]/l, 3))
+            average = (average[0] + i[0]/l, average[1] + i[1]/l, average[2] + i[2]/l, 3)
         return average
 
     #Función que calcula la mejor probabilidad de una lista de probabilidades
