@@ -225,11 +225,11 @@ def board_setup(board_size_i, board_size_j, line_size, num_players, num_stones, 
             #Comprueba si el movimiento gana, pierde o empata
             check = end_checker(i, j, mindboard)
             if depth <= 0:
-                probs.append((0, 1, 0))
+                probs.append((0, 1.0, 0))
             elif check != -1 and num_bot in check:
-                probs.append((1, 0, 0))
+                probs.append((depth, 0, 0))
             elif check != -1 and num_bot not in check:
-                probs.append((0, 0, 1))               
+                probs.append((0, 0, 1.0))               
             else:
                 #Si no gana, pierde o empata, se llama a la función de nuevo con el turno del siguiente jugador
                 bag_copy = bot_bag[:]
